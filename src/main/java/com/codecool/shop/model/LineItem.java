@@ -14,6 +14,4 @@ public class LineItem {
         this.quantity = quantity;
         this.price = price;
     }
-    
-
 }
