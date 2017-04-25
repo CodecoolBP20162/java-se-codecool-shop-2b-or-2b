@@ -6,6 +6,7 @@ import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.model.BaseModel;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
@@ -19,43 +20,47 @@ import java.util.Map;
 
 public class ProductController {
 
-    public static ModelAndView renderProducts(Request req, Response res) {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
+    ProductDao productDataStore;
+    ProductCategoryDao productCategoryDataStore;
+    SupplierDao supplierDataStore;
 
-        Map params = new HashMap<>();
+    public ProductController() {
+        productDataStore = ProductDaoMem.getInstance();
+        productCategoryDataStore = ProductCategoryDaoMem.getInstance();
+        supplierDataStore = SupplierDaoMem.getInstance();
+    }
+
+    private Map<String, Object> createDefaultMap() {
+        Map<String, Object> params = new HashMap<>();
         params.put("categories", productCategoryDataStore.getAll());
         params.put("products", productDataStore.getAll());
         params.put("suppliers", supplierDataStore.getAll());
+        return params;
+    }
+
+    public ModelAndView renderProducts(Request req, Response res) {
+        Map<String, Object> params = createDefaultMap();
+
         return new ModelAndView(params, "product/index");
     }
 
-    public static ModelAndView renderProductsBySupplier(Request req, Response res) {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
+    public ModelAndView renderProductsBySupplier(Request req, Response res) {
         String supplierName = req.params(":name");
         Supplier chosenSupplier = supplierDataStore.find(supplierName);
 
-        Map params = new HashMap<>();
-        params.put("categories", productCategoryDataStore.getAll());
+        Map<String, Object> params = createDefaultMap();
         params.put("products", productDataStore.getBy(chosenSupplier));
-        params.put("suppliers", supplierDataStore.getAll());
+
         return new ModelAndView(params, "product/index");
     }
 
-    public static ModelAndView renderProductsByCategory(Request req, Response res) {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
+    public ModelAndView renderProductsByCategory(Request req, Response res) {
         String categoryName = req.params(":name");
         ProductCategory chosenCategory = productCategoryDataStore.find(categoryName);
 
-        Map params = new HashMap<>();
-        params.put("categories", productCategoryDataStore.getAll());
+        Map<String, Object> params = createDefaultMap();
         params.put("products", productDataStore.getBy(chosenCategory));
-        params.put("suppliers", supplierDataStore.getAll());
+
         return new ModelAndView(params, "product/index");
     }
 }

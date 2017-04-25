@@ -25,18 +25,18 @@ public class Main {
         get("/hello", (req, res) -> "Hello World");
 
         // Always add generic routes to the end
-        get("/", ProductController::renderProducts, new ThymeleafTemplateEngine());
+        get("/", new ProductController()::renderProducts, new ThymeleafTemplateEngine());
 
         get("/index", (Request req, Response res) -> {
-           return new ThymeleafTemplateEngine().render( ProductController.renderProducts(req, res) );
+           return new ThymeleafTemplateEngine().render( new ProductController().renderProducts(req, res) );
         });
 
         get("/supplier/:name", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( ProductController.renderProductsBySupplier(req, res) );
+            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsBySupplier(req, res) );
         });
 
         get("/category/:name", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( ProductController.renderProductsByCategory(req, res) );
+            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
 
 
