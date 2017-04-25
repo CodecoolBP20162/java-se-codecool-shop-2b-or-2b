@@ -8,6 +8,9 @@ public interface SupplierDao {
 
     void add(Supplier supplier);
     Supplier find(int id);
+
+    Supplier find(String name);
+
     void remove(int id);
 
     List<Supplier> getAll();

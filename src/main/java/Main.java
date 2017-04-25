@@ -26,12 +26,21 @@ public class Main {
 
         // Always add generic routes to the end
         get("/", ProductController::renderProducts, new ThymeleafTemplateEngine());
-        // Equivalent with above
+
         get("/index", (Request req, Response res) -> {
            return new ThymeleafTemplateEngine().render( ProductController.renderProducts(req, res) );
         });
 
-        // Add this line to your project to enable the debug screen
+        get("/supplier/:name", (Request req, Response res) -> {
+            return new ThymeleafTemplateEngine().render( ProductController.renderProductsBySupplier(req, res) );
+        });
+
+        get("/category/:name", (Request req, Response res) -> {
+            return new ThymeleafTemplateEngine().render( ProductController.renderProductsByCategory(req, res) );
+        });
+
+
+        //Add this line to your project to enable the debug screen
         enableDebugScreen();
     }
 
@@ -50,6 +59,8 @@ public class Main {
         //setting up a new product category
         ProductCategory tablet = new ProductCategory("Tablet", "Hardware", "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.");
         productCategoryDataStore.add(tablet);
+        ProductCategory laptop = new ProductCategory("Laptop", "Hardware", "A portable computer with little weight and long battery life.");
+        productCategoryDataStore.add(laptop);
 
         //setting up products and printing it
         productDataStore.add(new Product("Amazon Fire", 49.9f, "USD", "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", tablet, amazon));
