@@ -5,12 +5,13 @@ import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
-import com.codecool.shop.model.*;
+import com.codecool.shop.model.Product;
+import com.codecool.shop.model.ProductCategory;
+import com.codecool.shop.model.ShoppingCart;
+import com.codecool.shop.model.Supplier;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
-
-import javax.sound.sampled.Line;
 
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
@@ -48,6 +49,7 @@ public class Main {
         get("/addToCart/:id", (Request req, Response res) -> {
             System.out.println(req.params("id"));
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
+            res.redirect("/");
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
 
