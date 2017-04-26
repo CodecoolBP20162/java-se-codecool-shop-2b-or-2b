@@ -9,9 +9,9 @@ public class LineItem {
     private int quantity;
     private float price;
 
-    public LineItem(Product product, int quantity){
+    public LineItem(Product product){
         this.product = product;
-        this.quantity = quantity;
+        this.quantity = 1;
         this.price = calculatePrice();
     }
 
@@ -19,5 +19,18 @@ public class LineItem {
 
     public float calculatePrice(){
         return quantity * product.getDefaultPrice();
+    }
+
+    public void setQuantity() {
+        quantity++;
+    }
+
+    @Override
+    public String toString() {
+        return "LineItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
     }
 }
