@@ -25,4 +25,20 @@ public class ShoppingCart {
     public void setCartItems(LineItem lineItem){
         cartItems.add(lineItem);
     }
+
+    public List<LineItem> getCartItems(){
+        return cartItems;
+    }
+
+    public Product findProductById(int id){
+        List<LineItem> cartItems = getCartItems();
+        for(LineItem i : cartItems){
+            if(i.getProduct().getId() == id){
+                return i.getProduct();
+            } else{
+                continue;
+            }
+        }
+        return null;
+    }
 }

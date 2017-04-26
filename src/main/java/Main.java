@@ -1,13 +1,20 @@
-import static spark.Spark.*;
-import static spark.debug.DebugScreen.enableDebugScreen;
-
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.*;
-import com.codecool.shop.dao.implementation.*;
-import com.codecool.shop.model.*;
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
+import com.codecool.shop.dao.implementation.ProductDaoMem;
+import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.model.Product;
+import com.codecool.shop.model.ProductCategory;
+import com.codecool.shop.model.ShoppingCart;
+import com.codecool.shop.model.Supplier;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+
+import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Main {
 
@@ -39,6 +46,13 @@ public class Main {
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
 
+        get("/addToCart/:id", (Request req, Response res) -> {
+            System.out.println(req.params("id"));
+            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+        });
+
+
+
 
         //Add this line to your project to enable the debug screen
         enableDebugScreen();
@@ -49,6 +63,9 @@ public class Main {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
+
+        //setting up the shopping cart
+        ShoppingCart shoppingCart = ShoppingCart.getInstance();
 
         //setting up a new supplier
         Supplier amazon = new Supplier("Amazon", "Digital content and services");

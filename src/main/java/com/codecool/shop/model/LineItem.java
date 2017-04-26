@@ -9,9 +9,15 @@ public class LineItem {
     private int quantity;
     private float price;
 
-    public LineItem(Product product, int quantity, float price){
+    public LineItem(Product product, int quantity){
         this.product = product;
         this.quantity = quantity;
-        this.price = price;
+        this.price = calculatePrice();
+    }
+
+    public Product getProduct(){return product;}
+
+    public float calculatePrice(){
+        return quantity * product.getDefaultPrice();
     }
 }
