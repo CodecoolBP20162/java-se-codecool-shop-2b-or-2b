@@ -1,13 +1,19 @@
-import static spark.Spark.*;
-import static spark.debug.DebugScreen.enableDebugScreen;
-
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.*;
-import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
+import com.codecool.shop.dao.implementation.ProductDaoMem;
+import com.codecool.shop.dao.implementation.SupplierDaoMem;
 import com.codecool.shop.model.*;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+
+import javax.sound.sampled.Line;
+
+import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Main {
 
@@ -39,6 +45,14 @@ public class Main {
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
 
+        get("/addToCart/:id", (Request req, Response res) -> {
+            System.out.println(req.params("id"));
+            ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
+            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+        });
+
+
+
 
         //Add this line to your project to enable the debug screen
         enableDebugScreen();
@@ -49,6 +63,9 @@ public class Main {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
+
+        //setting up the shopping cart
+        ShoppingCart shoppingCart = ShoppingCart.getInstance();
 
         //setting up a new supplier
         Supplier amazon = new Supplier("Amazon", "Digital content and services");
@@ -70,7 +87,6 @@ public class Main {
         productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD", "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", tablet, amazon));
         productDataStore.add(new Product("Dell Inspiron 5559-I5G159LE", 594, "USD", "Very gut very strong you should buy it, different colors available.", laptop, DELL));
         productDataStore.add(new Product("msi-apache-pro", 1188, "USD", "Good choice for gaming", laptop, amazon));
-
     }
 
 
