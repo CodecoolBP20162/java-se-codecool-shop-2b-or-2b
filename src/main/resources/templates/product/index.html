@@ -34,8 +34,27 @@
 </div>
 
 <div class="container">
-    <div class="well well-sm">
-        <strong th:text="${category.name}">Category Title</strong>
+
+    <div class="filters">
+        <div class="dropdown" id="supplier-filter">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" onclick="index">Filter products by supplier
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li th:each="supplier,iterStat : ${suppliers}">
+                    <a th:text="${supplier.name}" th:href="'/supplier/' + ${supplier.name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="dropdown" id="category-filter ">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter products by category
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li th:each="category,iterStat : ${categories}">
+                    <a th:text="${category.name}" th:href="'/category/' + ${category.name}"></a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div id="products" class="row list-group">
@@ -51,7 +70,7 @@
                             <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
                         </div>
                         <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="#">Add to cart</a>
+                            <a class="btn btn-success" href="/index">Add to cart</a>
                         </div>
                     </div>
                 </div>
