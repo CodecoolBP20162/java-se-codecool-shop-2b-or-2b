@@ -60,3 +60,9 @@
 {
     margin: 0 0 11px;
 }
+
+.filters
+{
+    display: inline-flex;
+    padding-bottom: 20px;
+}
