@@ -25,4 +25,11 @@ public class User {
     public void setOrders(Order order){
         orders.add(order);
     }
+
+    public String getName(){return name;}
+
+    public static User createUser(String name, String email, String phoneNumber, String billingAddress, String shippingAddress){
+        User newUser = new User(name, email, phoneNumber, billingAddress, shippingAddress);
+        return newUser;
+    }
 }

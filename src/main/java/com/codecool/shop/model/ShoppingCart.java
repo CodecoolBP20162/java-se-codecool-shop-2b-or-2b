@@ -2,7 +2,6 @@ package com.codecool.shop.model;
 
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +19,14 @@ public class ShoppingCart {
     public static ShoppingCart getInstance(){
         if(instance == null){
             instance = new ShoppingCart();
+            System.out.print("OK");
         }
         return instance;
 
+    }
+
+    public static void setInstanceToNull(ShoppingCart shoppingCart){
+        instance = null;
     }
 
     public void setCartItems(LineItem lineItem){

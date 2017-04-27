@@ -1,14 +1,20 @@
 package com.codecool.shop.model;
 
+import java.util.List;
+
 /**
  * Created by joker on 2017.04.25..
  */
 public class Order {
-    private ShoppingCart shoppingCart;
-    private User user;
+    private List<LineItem> shoppingCartContent;
 
-    public Order(ShoppingCart shoppingCart, User user){
-        this.shoppingCart = shoppingCart;
-        this.user = user;
+
+    public Order(List<LineItem> lineItemList){
+        this.shoppingCartContent = lineItemList;
     }
+
+    public List<LineItem> getShoppingCartContent(){
+        return shoppingCartContent;
+    }
+
 }

@@ -31,7 +31,16 @@ $(document).ready(function () {
         disableCheckButton(itemId);
     });
 
+    $("#paymentButton").click(function(event){
+        event.preventDefault();
+        var name = $("#name-input").val();
+        var email = $("#email-input").val();
+        var phone = $("#phone-input").val();
+        var billingAddress = $("#address-input").val();
+        var shippingAddress = $("#shipping-input").val();
 
+        payment(name, email, phone, billingAddress, shippingAddress);
+    });
 
 });
 
@@ -94,6 +103,15 @@ function updateTotalPrice(totalPrice, plusItemPrice, plusItemQuantity){
     var newTotalPrice = totalPrice
     newTotalPrice += plusItemPrice*plusItemQuantity;
     return newTotalPrice;
+}
+
+
+function payment(name, email, phone, billingAdress, shippingAddress){
+
+    $.post("/saveUserData", {"name": name, "email": email, "phone": phone, "billingAddress": billingAdress, "shippingAddress": shippingAddress}, function(data){
+        console.log()
+    });
+
 }
 
 
