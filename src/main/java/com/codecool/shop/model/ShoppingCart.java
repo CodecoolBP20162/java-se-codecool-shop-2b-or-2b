@@ -59,17 +59,20 @@ public class ShoppingCart {
         return null;
     }
 
+    public void deleteProductById(int id){
+        LineItem itemToDelete = findLineItemById(id);
+        cartItems.remove(itemToDelete);
+    };
+
     public void handleAddToCart (int id) {
         Product foundItem = findProductById(id);
         if (foundItem == null) {
             Product prod = ProductDaoMem.getInstance().find(id);
             LineItem newlineItem = new LineItem(prod);
             setCartItems(newlineItem);
-            System.out.println(ShoppingCart.getInstance());
         } else {
             LineItem foundLineItem = findLineItemById(id);
-            foundLineItem.setQuantity();
-            System.out.println(ShoppingCart.getInstance());
+            foundLineItem.raiseQuantity();
         }
     }
 

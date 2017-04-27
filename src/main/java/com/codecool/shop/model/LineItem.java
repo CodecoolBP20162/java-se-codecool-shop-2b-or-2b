@@ -25,7 +25,11 @@ public class LineItem {
         return quantity * product.getDefaultPrice();
     }
 
-    public void setQuantity() {
+    public void setQuantity(int newQuantity) {
+        quantity = newQuantity;
+    }
+
+    public void raiseQuantity() {
         quantity++;
     }
 

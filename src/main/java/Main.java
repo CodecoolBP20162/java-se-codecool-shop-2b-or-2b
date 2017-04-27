@@ -12,9 +12,7 @@ import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
-
 import java.util.List;
-
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
@@ -90,6 +88,22 @@ public class Main {
                     .create().toJson( ShoppingCart.getInstance().getCartItems());
         });
 
+        get("/remove/:id", (Request req, Response res) -> {
+            String param = req.params("id");
+            int itemId = Integer.valueOf(param);
+            ShoppingCart.getInstance().deleteProductById(itemId);
+            return true;
+        });
+
+        get("/change-quantity/:id/:quantity", (Request req, Response res) -> {
+            String id = req.params("id");
+            String quantity = req.params("quantity");
+            int itemId = Integer.valueOf(id);
+            int newQuantity = Integer.valueOf(quantity);
+            System.out.println(newQuantity);
+            ShoppingCart.getInstance().findLineItemById(itemId).setQuantity(newQuantity);
+            return true;
+        });
 
         //Add this line to your project to enable the debug screen
         enableDebugScreen();
