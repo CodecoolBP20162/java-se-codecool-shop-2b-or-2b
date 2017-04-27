@@ -13,8 +13,6 @@ import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 
-import javax.sound.sampled.Line;
-
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
@@ -51,6 +49,7 @@ public class Main {
         get("/addToCart/:id", (Request req, Response res) -> {
             System.out.println(req.params("id"));
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
+            res.redirect("/");
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
 
