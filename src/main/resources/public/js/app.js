@@ -6,6 +6,20 @@ $(document).ready(function () {
             renderItemData(cartItems[i])
         }
     });
+
+
+    $("#paymentButton").click(function(event){
+        event.preventDefault();
+        var name = $("#name-input").val();
+        var email = $("#email-input").val();
+        var phone = $("#phone-input").val();
+        var billingAddress = $("#address-input").val();
+        var shippingAddress = $("#shipping-input").val();
+
+        payment(name, email, phone, billingAddress, shippingAddress);
+    });
+
+    console.log(name);
 });
 
 function renderItemData(item){
@@ -28,6 +42,15 @@ function disableCheckButton(item) {
 $( "#target" ).click(function() {
 
 });
+
+
+function payment(name, email, phone, billingAdress, shippingAddress){
+
+    $.post("/saveUserData", {"name": name, "email": email, "phone": phone, "billingAddress": billingAdress, "shippingAddress": shippingAddress}, function(data){
+        console.log()
+    });
+
+}
 
 
 

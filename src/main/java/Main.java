@@ -1,21 +1,19 @@
 import com.codecool.shop.controller.ProductController;
+import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
-import com.codecool.shop.model.ShoppingCart;
-import com.codecool.shop.model.Supplier;
 import com.codecool.shop.model.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+
+import java.util.List;
 
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
@@ -52,12 +50,28 @@ public class Main {
 
         get("/addToCart/:id", (Request req, Response res) -> {
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
-            res.redirect("/");
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+            res.redirect("/payment");
+            return null;
         });
 
         get("/checkout", (Request req, Response res) -> {
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+        });
+
+        post("/saveUserData", (Request req, Response res) -> {
+            User newUser = User.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
+            ShoppingCart shoppingCart = ShoppingCart.getInstance();
+            List<LineItem> shoppingCartContent = shoppingCart.getCartItems();
+            OrderDao orderDataStore = OrderDaoMem.getInstance();
+            Order newOrder = new Order(shoppingCartContent);
+            orderDataStore.add(newOrder);
+            ShoppingCart.setInstanceToNull(null);
+            ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
+            return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res));
+        });
+
+        get("/payment", (Request req, Response res) -> {
+            return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res) );
         });
 
         get("/cart", (Request req, Response res) -> {
@@ -86,6 +100,7 @@ public class Main {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
+
 
         //setting up a new supplier
         Supplier amazon = new Supplier("Amazon", "Digital content and services");

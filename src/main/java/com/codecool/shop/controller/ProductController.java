@@ -41,6 +41,12 @@ public class ProductController {
         return new ModelAndView(params, "product/index");
     }
 
+    public ModelAndView renderPayment(Request req, Response res) {
+        Map<String, Object> params = createDefaultMap();
+
+        return new ModelAndView(params, "product/payment");
+    }
+
     public ModelAndView renderProductsBySupplier(Request req, Response res) {
         String supplierName = req.params(":name");
         Supplier chosenSupplier = supplierDataStore.find(supplierName);
