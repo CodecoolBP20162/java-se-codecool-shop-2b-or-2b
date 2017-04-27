@@ -3,7 +3,12 @@ $(document).ready(function () {
     $.get(url, function (data) {
         var cartItems = JSON.parse(data);
         for (var i=0; i<cartItems.length; i++) {
-            renderItemData(cartItems[i])
+            renderItemData(cartItems[i]);
+        }
+        if(cartItems.length>0){
+            showTotalPrice(cartItems);
+        }else{
+            showEmptyCartMessage();
         }
     });
 
@@ -31,6 +36,7 @@ $(document).ready(function () {
 });
 
 function renderItemData(item){
+    $('#empty-message').remove();
     $("#shoppingcart").append(
         '<tr class="cart-item" id="' + item.product.id + '">' +
         '<td><img class="item-pics" src=/img/product_' + item.product.id + '.jpg /></td>' +
@@ -67,6 +73,28 @@ function changeItemQuantity(itemId, newQuantity) {
 }
 
 
+function showTotalPrice(cartItems) {
+    var totalPrice = 0;
+    for (var i=0; i<cartItems.length; i++) {
+        var intPrice = parseInt(cartItems[i].product.defaultPrice);
+        var quantity = parseInt(cartItems[i].quantity);
+        var newTotalPrice = updateTotalPrice(totalPrice, intPrice, quantity);
+        totalPrice = newTotalPrice;
+    }
+    $("#total-price").append(
+        '<p>Total price: ' + newTotalPrice + ' USD</p>'
+    );
+}
+
+function showEmptyCartMessage(){
+    $("#shoppingcart").append("<p id='empty-message'>Your cart is currently empty.</p>");
+}
+
+function updateTotalPrice(totalPrice, plusItemPrice, plusItemQuantity){
+    var newTotalPrice = totalPrice
+    newTotalPrice += plusItemPrice*plusItemQuantity;
+    return newTotalPrice;
+}
 
 
 

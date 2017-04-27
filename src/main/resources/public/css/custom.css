@@ -89,3 +89,7 @@
 :disabled {
     color: #adadad;
 }
+
+.modal-header {
+    border-bottom: none;
+}
