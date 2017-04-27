@@ -47,13 +47,14 @@ public class Main {
         });
 
         get("/addToCart/:id", (Request req, Response res) -> {
-            System.out.println(req.params("id"));
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
             res.redirect("/");
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
 
-
+        get("/checkout", (Request req, Response res) -> {
+            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+        });
 
 
         //Add this line to your project to enable the debug screen
@@ -65,9 +66,6 @@ public class Main {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
-
-        //setting up the shopping cart
-        ShoppingCart shoppingCart = ShoppingCart.getInstance();
 
         //setting up a new supplier
         Supplier amazon = new Supplier("Amazon", "Digital content and services");
