@@ -5,10 +5,10 @@ import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
-import com.codecool.shop.model.ShoppingCart;
-import com.codecool.shop.model.Supplier;
+import com.codecool.shop.model.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -51,6 +51,39 @@ public class Main {
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
             res.redirect("/");
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+        });
+
+        get("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+        });
+
+        put("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+        });
+
+        get("/remove/:id", (Request req, Response res) -> {
+            String param = req.params("id");
+            int itemId = Integer.valueOf(param);
+            ShoppingCart.getInstance().deleteProductById(itemId);
+            return true;
+        });
+
+        get("/change-quantity/:id/:quantity", (Request req, Response res) -> {
+            String id = req.params("id");
+            String quantity = req.params("quantity");
+            int itemId = Integer.valueOf(id);
+            int newQuantity = Integer.valueOf(quantity);
+            System.out.println(newQuantity);
+            ShoppingCart.getInstance().findLineItemById(itemId).setQuantity(newQuantity);
+            return true;
         });
 
 

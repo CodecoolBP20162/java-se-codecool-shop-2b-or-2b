@@ -23,7 +23,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/custom.css" />
 </head>
 
@@ -55,6 +56,11 @@
                 </li>
             </ul>
         </div>
+
+        <div class="shopping-cart">
+            <img id="cart" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/shoppingcart_icon.png'"
+                 alt="Review the items in your shopping cart" data-toggle="modal" data-target="#myModal"/>
+        </div>
     </div>
 
     <div id="products" class="row list-group">
@@ -79,6 +85,29 @@
     </div>
 
 </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Shopping cart items: </h4>
+                    <button type="button" class="close" data-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="shoppingcart">
+                        <tr>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div id="total-price">
+                    </div>
+                    <button type="button" id="checkout-button" class="btn btn-default" data-dismiss="modal">Order selected items</button>
+                    <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div th:replace="footer :: copy"></div>
 
