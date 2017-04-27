@@ -57,11 +57,6 @@
             </ul>
         </div>
 
-        <div class="userdata-modal">
-            <button id="checkout-btn" type="button" class="btn btn-default" data-toggle="modal"
-                    data-target="#userModal">Checkout</button>
-        </div>
-
         <div class="shopping-cart">
             <img id="cart" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/shoppingcart_icon.png'"
                  alt="Review the items in your shopping cart" data-toggle="modal" data-target="#myModal"/>
@@ -155,8 +150,10 @@
                 <div class="modal-footer">
                     <div id="total-price">
                     </div>
-                    <button type="button" id="checkout-button" class="btn btn-default" data-dismiss="modal">Order selected items</button>
+                    <button type="button" id="checkout-button" class="btn btn-default"
+                            data-dismiss="modal" data-toggle="modal" data-target="#userModal">Order selected items</button>
                     <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping</button>
+
                 </div>
             </div>
         </div>

@@ -106,12 +106,13 @@ function updateTotalPrice(totalPrice, plusItemPrice, plusItemQuantity){
 }
 
 
-function payment(name, email, phone, billingAdress, shippingAddress){
+function payment(name, email, phone, billingAddress, shippingAddress){
 
-    $.post("/saveUserData", {"name": name, "email": email, "phone": phone, "billingAddress": billingAdress, "shippingAddress": shippingAddress}, function(data){
-        console.log()
+    $.post("/saveUserData", {"name": name, "email": email, "phone": phone, "billingAddress": billingAddress,
+        "shippingAddress": shippingAddress}, function(data){
+        alert( "Order information: " + data );
     });
-
+    window.location.replace("http://localhost:8888/payment");
 }
 
 
