@@ -43,7 +43,6 @@ public class ProductController {
 
     public ModelAndView renderPayment(Request req, Response res) {
         Map<String, Object> params = createDefaultMap();
-
         return new ModelAndView(params, "product/payment");
     }
 

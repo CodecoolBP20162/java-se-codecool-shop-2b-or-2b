@@ -48,12 +48,7 @@ public class Main {
 
         get("/addToCart/:id", (Request req, Response res) -> {
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
-            res.redirect("/payment");
-            return null;
-        });
-
-        get("/checkout", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+            return new ThymeleafTemplateEngine().render( new ProductController().renderProducts(req, res) );
         });
 
         post("/saveUserData", (Request req, Response res) -> {
@@ -65,10 +60,11 @@ public class Main {
             orderDataStore.add(newOrder);
             ShoppingCart.setInstanceToNull(null);
             ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
-            return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res));
+            return "Order is completed";
         });
 
         get("/payment", (Request req, Response res) -> {
+            System.out.println("/payment root");
             return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res) );
         });
 
