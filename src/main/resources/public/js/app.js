@@ -27,6 +27,11 @@ $(document).ready(function () {
     $("#shoppingcart").on('focus','button.save-changes',function(){
         var itemId = parseInt($(this).closest(".cart-item").attr('id'));
         var newQuantity = parseInt($(this).closest('.cart-item').find('.quantity-input').val());
+        if (newQuantity === 0){
+            removeCartItem(itemId);
+            $(this).closest(".cart-item").remove();
+            showEmptyCartMessage();
+        }
         changeItemQuantity(itemId, newQuantity, cartItems);
         showTotalPrice(cartItems);
         disableCheckButton(itemId);
