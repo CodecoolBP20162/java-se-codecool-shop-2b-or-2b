@@ -73,6 +73,14 @@
     position: absolute;
     right: 10%;
 }
+#cartCounter
+{
+    font-size: 250%;
+    width: 40px;
+    position: absolute;
+    right: 14%;
+    top: 33%
+}
 
 .item-pics
 {

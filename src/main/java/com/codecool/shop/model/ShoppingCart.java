@@ -37,6 +37,19 @@ public class ShoppingCart {
         return cartItems;
     }
 
+    public int countItemsInTheCart(){
+        int counter = 0;
+        List<LineItem> cartItems = getCartItems();
+        if(cartItems.size() > 0) {
+            for (LineItem lineItem : cartItems) {
+                counter += lineItem.getQuantity();
+            }
+        } else {
+            return 0;
+        }
+        return counter;
+    }
+
     public Product findProductById(int id){
         List<LineItem> cartItems = getCartItems();
         for(LineItem i : cartItems){
