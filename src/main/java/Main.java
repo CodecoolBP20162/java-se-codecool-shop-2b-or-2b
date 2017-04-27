@@ -6,6 +6,9 @@ import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
 import com.codecool.shop.model.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -50,6 +53,23 @@ public class Main {
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
         });
+
+        get("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+        });
+
+        put("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+        });
+
 
 
 

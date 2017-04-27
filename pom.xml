@@ -42,5 +42,11 @@
             <artifactId>spark-debug-tools</artifactId>
             <version>0.5</version>
         </dependency>
+        <dependency>
+            <groupId>io.gsonfire</groupId>
+            <artifactId>gson-fire</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
     </dependencies>
 </project>

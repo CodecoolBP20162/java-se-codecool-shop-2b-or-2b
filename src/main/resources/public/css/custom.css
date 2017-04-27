@@ -73,3 +73,19 @@
     position: absolute;
     right: 10%;
 }
+
+.item-pics
+{
+    width: 100px;
+
+}
+
+.quantity-input
+{
+    width: 50px;
+
+}
+
+:disabled {
+    color: #adadad;
+}
