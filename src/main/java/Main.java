@@ -101,6 +101,14 @@ public class Main {
             return true;
         });
 
+        get("/counter", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().countItemsInTheCart());
+        });
+
         //Add this line to your project to enable the debug screen
         enableDebugScreen();
     }
