@@ -55,6 +55,11 @@ public class ShoppingCart {
         return null;
     }
 
+    public void deleteProductById(int id){
+        LineItem itemToDelete = findLineItemById(id);
+        cartItems.remove(itemToDelete);
+    };
+
     public void handleAddToCart (int id) {
         Product foundItem = findProductById(id);
         if (foundItem == null) {

@@ -70,6 +70,13 @@ public class Main {
                     .create().toJson( ShoppingCart.getInstance().getCartItems());
         });
 
+        get("/remove/:id", (Request req, Response res) -> {
+            String param = req.params("id");
+            int itemId = Integer.valueOf(param);
+            ShoppingCart.getInstance().deleteProductById(itemId);
+            return true;
+        });
+
 
 
 
