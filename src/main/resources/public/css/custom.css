@@ -66,3 +66,26 @@
     display: inline-flex;
     padding-bottom: 20px;
 }
+
+#cart
+{
+    width: 50px;
+    position: absolute;
+    right: 10%;
+}
+
+.item-pics
+{
+    width: 100px;
+
+}
+
+.quantity-input
+{
+    width: 50px;
+
+}
+
+:disabled {
+    color: #adadad;
+}

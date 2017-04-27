@@ -1,10 +1,14 @@
 package com.codecool.shop.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Currency;
 
 public class Product extends BaseModel {
 
+    @Expose
     private float defaultPrice;
+    @Expose
     private Currency defaultCurrency;
     private ProductCategory productCategory;
     private Supplier supplier;

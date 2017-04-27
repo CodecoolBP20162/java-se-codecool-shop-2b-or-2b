@@ -9,6 +9,10 @@ import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.ShoppingCart;
 import com.codecool.shop.model.Supplier;
+import com.codecool.shop.model.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -54,6 +58,22 @@ public class Main {
 
         get("/checkout", (Request req, Response res) -> {
             return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+        });
+
+        get("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+        });
+
+        put("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson( ShoppingCart.getInstance().getCartItems());
         });
 
 

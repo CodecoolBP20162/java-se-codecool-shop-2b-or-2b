@@ -23,7 +23,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/custom.css" />
 </head>
 
@@ -58,7 +59,12 @@
 
         <div class="userdata-modal">
             <button id="checkout-btn" type="button" class="btn btn-default" data-toggle="modal"
-                    data-target="#myModal">Checkout</button>
+                    data-target="#userModal">Checkout</button>
+
+        <div class="shopping-cart">
+            <img id="cart" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/shoppingcart_icon.png'"
+                 alt="Review the items in your shopping cart" data-toggle="modal" data-target="#myModal"/>
+
         </div>
     </div>
 
@@ -86,7 +92,7 @@
 
     <!-- Modal -->
     <div class="container">
-        <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal fade" id="userModal" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -130,6 +136,23 @@
     </div>
 
 </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Shopping cart items: </h4>
+                    <button type="button" class="close" data-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="shoppingcart">
+                        <tr>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div th:replace="footer :: copy"></div>
 
