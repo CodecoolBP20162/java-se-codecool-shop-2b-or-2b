@@ -77,6 +77,15 @@ public class Main {
             return true;
         });
 
+        get("/change-quantity/:id/:quantity", (Request req, Response res) -> {
+            String id = req.params("id");
+            String quantity = req.params("quantity");
+            int itemId = Integer.valueOf(id);
+            int newQuantity = Integer.valueOf(quantity);
+            System.out.println(newQuantity);
+            ShoppingCart.getInstance().findLineItemById(itemId).setQuantity(newQuantity);
+            return true;
+        });
 
 
 

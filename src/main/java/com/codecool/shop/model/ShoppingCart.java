@@ -66,11 +66,9 @@ public class ShoppingCart {
             Product prod = ProductDaoMem.getInstance().find(id);
             LineItem newlineItem = new LineItem(prod);
             setCartItems(newlineItem);
-            System.out.println(ShoppingCart.getInstance());
         } else {
             LineItem foundLineItem = findLineItemById(id);
-            foundLineItem.setQuantity();
-            System.out.println(ShoppingCart.getInstance());
+            foundLineItem.raiseQuantity();
         }
     }
 
