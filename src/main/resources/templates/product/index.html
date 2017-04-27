@@ -23,8 +23,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/custom.css" />
+    <link rel="icon" type="image/ico" href="/img/favicon.ico" />
 </head>
 
 <body>
@@ -34,8 +36,34 @@
 </div>
 
 <div class="container">
-    <div class="well well-sm">
-        <strong th:text="${category.name}">Category Title</strong>
+
+    <div class="filters">
+        <div class="dropdown" id="supplier-filter">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" onclick="index">Filter products by supplier
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li th:each="supplier,iterStat : ${suppliers}">
+                    <a th:text="${supplier.name}" th:href="'/supplier/' + ${supplier.name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="dropdown" id="category-filter ">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter products by category
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li th:each="category,iterStat : ${categories}">
+                    <a th:text="${category.name}" th:href="'/category/' + ${category.name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="shopping-cart">
+            <label id="cartCounter"></label>
+            <img id="cart" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/shoppingcart_icon.png'"
+                 alt="Review the items in your shopping cart" data-toggle="modal" data-target="#myModal"/>
+
+        </div>
     </div>
 
     <div id="products" class="row list-group">
@@ -51,7 +79,7 @@
                             <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
                         </div>
                         <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="#">Add to cart</a>
+                            <a class="btn btn-success" th:href="'/addToCart/' + ${prod.id}">Add to cart</a>
                         </div>
                     </div>
                 </div>
@@ -59,8 +87,80 @@
         </div>
     </div>
 
+
+    <!-- Modal -->
+    <div class="container">
+        <div class="modal fade" id="userModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="modal-title" class="modal-title">User Data</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="userData" action="/saveUserData" method="post">
+                            <div class="form-group">
+                                <label for="name-input">Name</label>
+                                <input type="text" class="form-control" name="name" id="name-input" placeholder="Name" required="true" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email-input">Email address</label>
+                                <input type="email" class="form-control" name="email" id="email-input" placeholder="Email" required="true" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone-input">Phone number</label>
+                                <input type="tel" class="form-control" name="phone" id="phone-input" placeholder="Phone number" required="true" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address-input">Billing Address</label>
+                                <input type="text" class="form-control" name="billingAddress" id="address-input" placeholder="Billing Address" required="true" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="shipping-input">Shipping Address</label>
+                                <input type="text" class="form-control" name="shippingAddress" id="shipping-input" placeholder="Shipping Address" required="true" />
+                            </div>
+                            <div class="modal-footer">
+                                <button id="paymentButton" type="button" class="btn btn-default" data-dismiss="modal">Payment</button>
+                                <button id="back-to-cart" type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#myModal">Back</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Shopping cart items: </h4>
+                    <button type="button" class="close" data-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="shoppingcart">
+                        <tr>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div id="total-price">
+                    </div>
+                    <button type="button" id="checkout-button" class="btn btn-default"
+                            data-dismiss="modal" data-toggle="modal" data-target="#userModal">Order selected items</button>
+                    <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 <div th:replace="footer :: copy"></div>
 
 </body>

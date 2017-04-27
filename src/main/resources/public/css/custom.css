@@ -60,3 +60,44 @@
 {
     margin: 0 0 11px;
 }
+
+.filters
+{
+    display: inline-flex;
+    padding-bottom: 20px;
+}
+
+#cart
+{
+    width: 50px;
+    position: absolute;
+    right: 10%;
+}
+#cartCounter
+{
+    font-size: 250%;
+    width: 40px;
+    position: absolute;
+    right: 14%;
+    top: 33%
+}
+
+.item-pics
+{
+    width: 100px;
+
+}
+
+.quantity-input
+{
+    width: 50px;
+
+}
+
+:disabled {
+    color: #adadad;
+}
+
+.modal-header {
+    border-bottom: none;
+}

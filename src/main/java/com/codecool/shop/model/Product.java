@@ -1,10 +1,14 @@
 package com.codecool.shop.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Currency;
 
 public class Product extends BaseModel {
 
+    @Expose
     private float defaultPrice;
+    @Expose
     private Currency defaultCurrency;
     private ProductCategory productCategory;
     private Supplier supplier;
@@ -36,6 +40,8 @@ public class Product extends BaseModel {
     public String getPrice() {
         return String.valueOf(this.defaultPrice) + " " + this.defaultCurrency.toString();
     }
+
+    public int getId(){return id;}
 
     public void setPrice(float price, String currency) {
         this.defaultPrice = price;
