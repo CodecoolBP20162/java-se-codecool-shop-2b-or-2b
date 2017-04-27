@@ -1,7 +1,8 @@
 $(document).ready(function () {
     var url = "/cart";
+    var cartItems;
     $.get(url, function (data) {
-        var cartItems = JSON.parse(data);
+        cartItems = JSON.parse(data);
         for (var i=0; i<cartItems.length; i++) {
             renderItemData(cartItems[i]);
         }
@@ -13,21 +14,21 @@ $(document).ready(function () {
     });
 
     $("#shoppingcart").on('focus','input.quantity-input',function(){
-        itemId = $(this).closest(".cart-item").attr('id');
+        var itemId = $(this).closest(".cart-item").attr('id');
         enableCheckButton(itemId);
     });
 
     $("#shoppingcart").on('focus','button.delete-item',function(){
-        itemId = $(this).closest(".cart-item").attr('id');
+        var itemId = $(this).closest(".cart-item").attr('id');
         removeCartItem(itemId);
         $(this).closest(".cart-item").remove();
     });
 
     $("#shoppingcart").on('focus','button.save-changes',function(){
-        itemId = $(this).closest(".cart-item").attr('id');
-        newQuantity = $(this).closest('.cart-item').find('.quantity-input').val();
-        console.log(newQuantity);
-        changeItemQuantity(itemId, newQuantity);
+        var itemId = parseInt($(this).closest(".cart-item").attr('id'));
+        var newQuantity = parseInt($(this).closest('.cart-item').find('.quantity-input').val());
+        changeItemQuantity(itemId, newQuantity, cartItems);
+        showTotalPrice(cartItems);
         disableCheckButton(itemId);
     });
 
@@ -75,8 +76,13 @@ function removeCartItem(itemId) {
     });
 }
 
-function changeItemQuantity(itemId, newQuantity) {
+function changeItemQuantity(itemId, newQuantity, cartItems) {
     var url = "/change-quantity/" + itemId + "/" +  newQuantity;
+    for (var i=0; i<cartItems.length; i++){
+        if (itemId == cartItems[i].product.id){
+            cartItems[i].quantity = newQuantity;
+        }
+    }
     $.get(url, function (data) {
     });
 }
@@ -85,24 +91,17 @@ function changeItemQuantity(itemId, newQuantity) {
 function showTotalPrice(cartItems) {
     var totalPrice = 0;
     for (var i=0; i<cartItems.length; i++) {
-        var intPrice = parseInt(cartItems[i].product.defaultPrice);
+        var itemPrice = parseInt(cartItems[i].product.defaultPrice);
         var quantity = parseInt(cartItems[i].quantity);
-        var newTotalPrice = updateTotalPrice(totalPrice, intPrice, quantity);
-        totalPrice = newTotalPrice;
+        totalPrice += itemPrice*quantity;
     }
-    $("#total-price").append(
-        '<p>Total price: ' + newTotalPrice + ' USD</p>'
+    $("#total-price").html(
+        '<p>Total price: ' + totalPrice + ' USD</p>'
     );
 }
 
 function showEmptyCartMessage(){
     $("#shoppingcart").append("<p id='empty-message'>Your cart is currently empty.</p>");
-}
-
-function updateTotalPrice(totalPrice, plusItemPrice, plusItemQuantity){
-    var newTotalPrice = totalPrice
-    newTotalPrice += plusItemPrice*plusItemQuantity;
-    return newTotalPrice;
 }
 
 
