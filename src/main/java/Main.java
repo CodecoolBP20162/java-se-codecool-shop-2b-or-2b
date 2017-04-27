@@ -60,7 +60,7 @@ public class Main {
             orderDataStore.add(newOrder);
             ShoppingCart.setInstanceToNull(null);
             ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
-            return "Order is completed";
+            return "Ok";
         });
 
         get("/payment", (Request req, Response res) -> {
