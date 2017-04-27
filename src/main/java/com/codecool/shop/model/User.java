@@ -6,10 +6,8 @@ import java.util.List;
 /**
  * Created by joker on 2017.04.25..
  */
-public class User {
+public class User extends Person {
     private List<Order> orders= new ArrayList<>();
-    private String name;
-    private String email;
     private String phoneNumber;
     private String billingAddress;
     private String shippingAddress;
@@ -26,10 +24,20 @@ public class User {
         orders.add(order);
     }
 
-    public String getName(){return name;}
-
     public static User createUser(String name, String email, String phoneNumber, String billingAddress, String shippingAddress){
         User newUser = new User(name, email, phoneNumber, billingAddress, shippingAddress);
         return newUser;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", orders=" + orders +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", billingAddress='" + billingAddress + '\'' +
+                ", shippingAddress='" + shippingAddress + '\'' +
+                '}';
     }
 }

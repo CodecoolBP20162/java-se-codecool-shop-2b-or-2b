@@ -19,7 +19,6 @@ public class ShoppingCart {
     public static ShoppingCart getInstance(){
         if(instance == null){
             instance = new ShoppingCart();
-            System.out.print("OK");
         }
         return instance;
 
