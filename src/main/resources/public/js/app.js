@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     $("#shoppingcart").on('focus','button.delete-item',function(){
         var itemId = $(this).closest(".cart-item").attr('id');
-        removeCartItem(itemId);
+        removeCartItem(itemId, cartItems);
         $(this).closest(".cart-item").remove();
     });
 
@@ -89,11 +89,13 @@ function disableCheckButton(productId) {
     $("#save-changes" + productId).prop("disabled", true);
 }
 
-function removeCartItem(itemId) {
+function removeCartItem(itemId, cartItems) {
     var url = "/remove/" + itemId;
     $.get(url, function (data) {
     });
-    cartCounter()
+    deleteItemFromCartItems(itemId, cartItems);
+    showTotalPrice(cartItems);
+    cartCounter();
 }
 
 function changeItemQuantity(itemId, newQuantity, cartItems) {
@@ -105,7 +107,15 @@ function changeItemQuantity(itemId, newQuantity, cartItems) {
     }
     $.get(url, function (data) {
     });
-    cartCounter()
+    cartCounter();
+}
+
+function deleteItemFromCartItems(itemId, cartItems){
+    for (var i=0; i<cartItems.length; i++){
+        if (itemId == cartItems[i].product.id){
+            cartItems.pop(cartItems[i]);
+        }
+    }
 }
 
 
@@ -117,7 +127,7 @@ function showTotalPrice(cartItems) {
         totalPrice += itemPrice*quantity;
     }
     $("#total-price").html(
-        '<p>Total price: ' + totalPrice + ' USD</p>'
+        '<p id="total-price">Total price: ' + totalPrice + ' USD</p>'
     );
 }
 
