@@ -26,6 +26,7 @@
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/css/simple-sidebar.css" />
     <link rel="icon" type="image/ico" href="/img/favicon.ico" />
 </head>
 
@@ -36,7 +37,6 @@
 </div>
 
 <div class="container">
-
     <div class="filters">
         <div class="dropdown" id="supplier-filter">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" onclick="index">Filter products by supplier
@@ -62,12 +62,10 @@
             <label id="cartCounter"></label>
             <img id="cart" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/shoppingcart_icon.png'"
                  alt="Review the items in your shopping cart" data-toggle="modal" data-target="#myModal"/>
-
         </div>
     </div>
 
     <div id="products" class="row list-group">
-
         <div class="item col-xs-4 col-lg-4" th:each="prod,iterStat : ${products}">
             <div class="thumbnail">
                 <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/product_' + ${prod.id} + '.jpg'" alt="" />
@@ -86,6 +84,34 @@
             </div>
         </div>
     </div>
+
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="sidebar-nav">
+                <div class="sidebar-brand">
+                    <p></p>
+                    <div>Select your filters</div>
+                    <div id="filterList">
+                        <form action="/index" method="post">
+                            <p></p>
+                            <div class="category">Product category:</div>
+                            <div th:each="category:${categories}">
+                                <span th:text="${category.name}"></span>
+                            </div>
+                            <p></p>
+                            <div class="category">Suppliers:</div>
+                            <div th:each="supplier:${suppliers}">
+                                <span th:text="${supplier.name}"></span>
+                            </div>
+                            <p></p>
+                            <div><input class="btn btn-primary btn-sm" type="submit" value="Filter"/></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Modal -->
@@ -137,30 +163,30 @@
 
 </div>
 
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title"> Shopping cart items: </h4>
-                    <button type="button" class="close" data-dismiss="modal">X</button>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> Shopping cart items: </h4>
+                <button type="button" class="close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <table class="table" id="shoppingcart">
+                    <tr>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div id="total-price">
                 </div>
-                <div class="modal-body">
-                    <table class="table" id="shoppingcart">
-                        <tr>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <div id="total-price">
-                    </div>
-                    <button type="button" id="checkout-button" class="btn btn-default"
-                            data-dismiss="modal" data-toggle="modal" data-target="#userModal">Order selected items</button>
-                    <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping</button>
+                <button type="button" id="checkout-button" class="btn btn-default"
+                        data-dismiss="modal" data-toggle="modal" data-target="#userModal">Order selected items</button>
+                <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping</button>
 
-                </div>
             </div>
         </div>
     </div>
+</div>
 <div th:replace="footer :: copy"></div>
 
 </body>
