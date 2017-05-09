@@ -47,6 +47,11 @@
             <artifactId>gson-fire</artifactId>
             <version>1.8.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.0.0</version>
+        </dependency>
 
     </dependencies>
 </project>
