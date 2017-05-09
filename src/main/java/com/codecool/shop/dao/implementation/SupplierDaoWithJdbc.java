@@ -18,7 +18,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     @Override
     public void add(Supplier supplier) {
         //Inserts a new supplier to the table
-        String query = "INSERT INTO supplier (name, description) VALUES ('" + supplier.getName() + "', '"
+        String query = "INSERT INTO suppliers (name, description) VALUES ('" + supplier.getName() + "', '"
                 + supplier.getDescription() + "');";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
@@ -31,7 +31,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     @Override
     public Supplier find(int id) {
         //Returns the supplier with the given id in the db
-        String query = "SELECT * FROM supplier WHERE id='" + id + "';";
+        String query = "SELECT * FROM suppliers WHERE id='" + id + "';";
         Supplier supplier = null;
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
@@ -49,7 +49,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     @Override
     public Supplier find(String name) {
         //Returns the supplier with the given name in the db
-        String query = "SELECT * FROM supplier WHERE name='" + name + "';";
+        String query = "SELECT * FROM suppliers WHERE name='" + name + "';";
         Supplier supplier = null;
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
@@ -68,7 +68,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
 
     @Override
     public void remove(int id) {
-        String query = "DELETE FROM supplier WHERE id='" + id + "';";
+        String query = "DELETE FROM suppliers WHERE id='" + id + "';";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
@@ -80,7 +80,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     @Override
     public List<Supplier> getAll() {
         ArrayList<Supplier> suppliers = new ArrayList();
-        String query = "SELECT * FROM supplier;";
+        String query = "SELECT * FROM suppliers;";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
             while (result.next()) {

@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     @Override
     public void add(ProductCategory category) {
-        String query = " INSERT INTO product_category (name, department, description) " +
+        String query = " INSERT INTO product_categories (name, department, description) " +
                 "VALUES ('" + category.getName() + "', '" + category.getDepartment() + "', '"
                 + category.getDescription() + "');";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
@@ -28,7 +28,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     @Override
     public ProductCategory find(int id) {
         ProductCategory category = null;
-        String query = "SELECT * FROM product_category WHERE id ='" + id + "';";
+        String query = "SELECT * FROM product_categories WHERE id ='" + id + "';";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
         {
             ResultSet result = statement.executeQuery(query);
@@ -49,7 +49,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     @Override
     public ProductCategory find(String name) {
         ProductCategory category = null;
-        String query = "SELECT * FROM product_category WHERE name ='" + name + "';";
+        String query = "SELECT * FROM product_categories WHERE name ='" + name + "';";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
         {
             ResultSet result = statement.executeQuery(query);
@@ -70,7 +70,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     @Override
     public void remove(int id) {
-        String query = "DELETE FROM product_category WHERE id='" + id + "';";
+        String query = "DELETE FROM product_categories WHERE id='" + id + "';";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
         {
             statement.executeUpdate(query);
@@ -82,13 +82,13 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     @Override
     public List<ProductCategory> getAll() {
         List<ProductCategory> allCategories = new ArrayList<>();
-        String query = "SELECT * FROM product_category";
+        String query = "SELECT * FROM product_categories;";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
             while (result.next()) {
                 ProductCategory current = new ProductCategory(result.getString("name"),
                         result.getString("department"), result.getString("description"));
-                current.setId(result.getInt("c_id"));
+                current.setId(result.getInt("id"));
                 current.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(current));
                 allCategories.add(current);
             }

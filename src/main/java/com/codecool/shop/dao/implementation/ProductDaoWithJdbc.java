@@ -15,10 +15,6 @@ import java.util.List;
  */
 public class ProductDaoWithJdbc implements ProductDao {
 
-    private static final String DATABASE = "jdbc:postgresql://localhost:5432/codecoolshop";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "postgres";
-
     private static ProductDaoWithJdbc instance = null;
 
     /* A private Constructor prevents any other class from instantiating.
@@ -36,7 +32,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public void add(Product product) {
-        String query = "INSERT INTO product (name, default_price, currency, description," +
+        String query = "INSERT INTO products (name, default_price, currency, description," +
                 " supplier, product_category) VALUES ('"+ product.getName() + "', '" + product.getDefaultPrice()
                 + "', '" + product.getDefaultCurrency() + "', '" + product.getDescription() + "', '"
                 + product.getSupplier().getId() + "', '" + product.getProductCategory().getId() + "');";
@@ -50,7 +46,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public Product find(int id) {
-        String query = "SELECT * FROM product LEFT JOIN product_category ON productcategory=id LEFT JOIN supplier ON supplier=id WHERE id ='" + id + "';";
+        String query = "SELECT * FROM products LEFT JOIN product_category ON productcategory=id LEFT JOIN supplier ON supplier=id WHERE id ='" + id + "';";
         Product product = null;
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
             ResultSet result = statement.executeQuery(query);
@@ -73,7 +69,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public void remove(int id) {
-        String query = "DELETE FROM product WHERE id = '" + id +"';";
+        String query = "DELETE FROM products WHERE id = '" + id +"';";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
         {
             statement.executeUpdate(query);
@@ -84,19 +80,19 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public List<Product> getAll() {
-        String query = "SELECT id FROM product;";
+        String query = "SELECT * FROM products;";
         return queryExecuteHandler(query);
     }
 
     @Override
     public List<Product> getBy(Supplier supplier) {
-        String query = "SELECT id FROM product WHERE supplier=" + supplier.getId() + ";";
+        String query = "SELECT id FROM products WHERE supplier=" + supplier.getId() + ";";
         return queryExecuteHandler(query);
     }
 
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
-        String query = "SELECT id FROM product WHERE product_category=" + productCategory.getId() + ";";
+        String query = "SELECT id FROM products WHERE product_category=" + productCategory.getId() + ";";
         return queryExecuteHandler(query);
     }
 

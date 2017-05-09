@@ -12,7 +12,7 @@ public class DBController {
     private static final String DB_PASSWORD = "postgres";
 
 
-    private Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 DATABASE,
                 DB_USER,
