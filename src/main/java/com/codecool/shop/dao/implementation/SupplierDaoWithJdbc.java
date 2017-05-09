@@ -15,13 +15,35 @@ import java.util.List;
 public class SupplierDaoWithJdbc implements SupplierDao {
 
 
+    private static SupplierDaoWithJdbc instance = null;
+
+    /* A private Constructor prevents any other class from instantiating.
+     */
+    protected SupplierDaoWithJdbc() {
+    }
+
+    public static SupplierDaoWithJdbc getInstance() {
+        if (instance == null) {
+            instance = new SupplierDaoWithJdbc();
+        }
+        return instance;
+    }
+
+
     @Override
     public void add(Supplier supplier) {
+        int id;
+        if(getAll().size()!=0){
+            id = getAll().size()+1;
+        }else{
+            id=1;
+        }
         //Inserts a new supplier to the table
-        String query = "INSERT INTO suppliers (name, description) VALUES ('" + supplier.getName() + "', '"
+        String query = "INSERT INTO suppliers (id, name, description) VALUES ('" + id + "','" + supplier.getName() + "', '"
                 + supplier.getDescription() + "');";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            supplier.setId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

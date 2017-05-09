@@ -32,12 +32,19 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public void add(Product product) {
-        String query = "INSERT INTO products (name, default_price, currency, description," +
-                " supplier, product_category) VALUES ('"+ product.getName() + "', '" + product.getDefaultPrice()
+        int id;
+        if(getAll().size()!=0){
+            id = getAll().size()+1;
+        }else{
+            id=1;
+        }
+        String query = "INSERT INTO products (id, name, default_price, currency, description," +
+                " supplier, product_category) VALUES ('"+ id + "','"+ product.getName() + "', '" + product.getDefaultPrice()
                 + "', '" + product.getDefaultCurrency() + "', '" + product.getDescription() + "', '"
                 + product.getSupplier().getId() + "', '" + product.getProductCategory().getId() + "');";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
             statement.executeUpdate(query);
+            product.setId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,7 +53,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public Product find(int id) {
-        String query = "SELECT * FROM products LEFT JOIN product_category ON productcategory=id LEFT JOIN supplier ON supplier=id WHERE id ='" + id + "';";
+        String query = "SELECT * FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.id ='" + id + "';";
         Product product = null;
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
             ResultSet result = statement.executeQuery(query);
@@ -56,7 +63,7 @@ public class ProductDaoWithJdbc implements ProductDao {
                 category.setId(result.getInt("product_category"));
                 Supplier supplier = new Supplier(result.getString("name"), result.getString("description"));
                 supplier.setId(result.getInt("supplier"));
-                product = new Product(result.getString("name"), result.getFloat("default_price"),
+                product = new Product(result.getString("name"), result.getInt("default_price"),
                         result.getString("currency"), result.getString("description"),
                         category, supplier);
                 product.setId(id);

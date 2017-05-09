@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS products, product_categories, suppliers, ordered_items, ord
 
 CREATE TABLE product_categories
 (
-  id varchar(36) PRIMARY KEY,
+  id integer PRIMARY KEY,
   name varchar(50),
   department varchar(50),
   description varchar(1000)
@@ -13,33 +13,33 @@ CREATE TABLE product_categories
 
 CREATE TABLE suppliers
 (
-  id varchar(36) PRIMARY KEY,
+  id integer PRIMARY KEY,
   name varchar(50),
   description varchar(1000)
 );
 
 CREATE TABLE products
 (
-  id varchar(36) PRIMARY KEY,
+  id integer PRIMARY KEY,
   name varchar(50),
   description varchar(1000),
   default_price integer,
   currency varchar(20),
-  product_category varchar REFERENCES product_categories (id),
-  supplier varchar REFERENCES suppliers (id)
+  product_category integer REFERENCES product_categories (id),
+  supplier integer REFERENCES suppliers (id)
 );
 
 CREATE TABLE ordered_items
 (
-  id varchar(36) PRIMARY KEY,
-  product varchar REFERENCES products (id),
+  id integer PRIMARY KEY,
+  product integer REFERENCES products (id),
   quantity integer,
   price integer
 );
 
 CREATE TABLE customers
 (
-  id varchar(36) PRIMARY KEY,
+  id integer PRIMARY KEY,
   name varchar(100),
   email varchar(100),
   phone_number integer,
@@ -49,7 +49,7 @@ CREATE TABLE customers
 
 CREATE TABLE orders
 (
-  id VARCHAR(36) PRIMARY KEY,
-  customer VARCHAR REFERENCES customers (id),
-  ordered_items VARCHAR REFERENCES ordered_items (id)
+  id integer PRIMARY KEY,
+  customer integer REFERENCES customers (id),
+  ordered_items integer REFERENCES ordered_items (id)
 );

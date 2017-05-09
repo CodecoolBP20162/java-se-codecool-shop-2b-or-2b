@@ -13,13 +13,36 @@ import java.util.List;
  * Created by kata on 2017.05.09..
  */
 public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
+
+    private static ProductCategoryDaoWithJdbc instance = null;
+
+    /* A private Constructor prevents any other class from instantiating.
+     */
+    protected ProductCategoryDaoWithJdbc() {
+    }
+
+    public static ProductCategoryDaoWithJdbc getInstance() {
+        if (instance == null) {
+            instance = new ProductCategoryDaoWithJdbc();
+        }
+        return instance;
+    }
+
+
     @Override
     public void add(ProductCategory category) {
-        String query = " INSERT INTO product_categories (name, department, description) " +
-                "VALUES ('" + category.getName() + "', '" + category.getDepartment() + "', '"
+        int id;
+        if(getAll().size()!=0){
+            id = getAll().size()+1;
+        }else{
+            id=1;
+        }
+        String query = " INSERT INTO product_categories (id, name, department, description) " +
+                "VALUES ('" + id + "','" + category.getName() + "', '" + category.getDepartment() + "', '"
                 + category.getDescription() + "');";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            category.setId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
