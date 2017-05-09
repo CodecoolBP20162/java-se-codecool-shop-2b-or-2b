@@ -60,6 +60,7 @@ public class Main {
             orderDataStore.add(newOrder);
             ShoppingCart.setInstanceToNull(null);
             ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
+            res.redirect("/payment");
             return "Ok";
         });
 
