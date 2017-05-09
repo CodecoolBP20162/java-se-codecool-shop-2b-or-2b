@@ -9,11 +9,11 @@ public class Order {
     private List<LineItem> shoppingCartContent;
 
 
-    public Order(List<LineItem> lineItemList){
+    public Order(List<LineItem> lineItemList) {
         this.shoppingCartContent = lineItemList;
     }
 
-    public List<LineItem> getShoppingCartContent(){
+    public List<LineItem> getShoppingCartContent() {
         return shoppingCartContent;
     }
 
