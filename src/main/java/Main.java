@@ -1,3 +1,4 @@
+import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.ProductCategoryDao;
@@ -19,6 +20,11 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 public class Main {
 
     public static void main(String[] args) {
+
+        //create postgres DB
+        DBController dbController = new DBController();
+        //test if db works
+        //dbController.add();
 
         // default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -60,6 +66,7 @@ public class Main {
             orderDataStore.add(newOrder);
             ShoppingCart.setInstanceToNull(null);
             ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
+            res.redirect("/payment");
             return "Ok";
         });
 

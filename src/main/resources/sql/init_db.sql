@@ -1,8 +1,9 @@
-DROP TABLE IF EXISTS codecoolshop;
+DROP TABLE IF EXISTS products;
 
 CREATE TABLE products
 (
-  name varchar(40)
+name varchar(40),
+age varchar(40)
 );
 
 
