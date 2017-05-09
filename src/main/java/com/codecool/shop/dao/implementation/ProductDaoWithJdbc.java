@@ -1,5 +1,6 @@
 package com.codecool.shop.dao.implementation;
 
+import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
@@ -68,7 +69,6 @@ public class ProductDaoWithJdbc implements ProductDao {
             e.printStackTrace();
         }
         return product;
-    }
     }
 
     @Override
