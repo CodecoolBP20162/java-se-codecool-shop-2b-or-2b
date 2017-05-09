@@ -33,23 +33,25 @@ public class ProductDaoWithJdbc implements ProductDao {
     @Override
     public void add(Product product) {
         int id;
-        if(getAll().size()!=0){
-            id = getAll().size()+1;
-        }else{
-            id=1;
-        }
-        String query = "INSERT INTO products (id, name, default_price, currency, description," +
-                " supplier, product_category) VALUES ('"+ id + "','"+ product.getName() + "', '" + product.getDefaultPrice()
-                + "', '" + product.getDefaultCurrency() + "', '" + product.getDescription() + "', '"
-                + product.getSupplier().getId() + "', '" + product.getProductCategory().getId() + "');";
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
-            statement.executeUpdate(query);
-            product.setId(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Product> existingSuppliers = getAll();
+        if (find(product.getName()) == null) {
+            if (getAll().size() != 0) {
+                id = getAll().size() + 1;
+            } else {
+                id = 1;
+            }
+            String query = "INSERT INTO products (id, name, default_price, currency, description," +
+                    " supplier, product_category) VALUES ('" + id + "','" + product.getName() + "', '" + product.getDefaultPrice()
+                    + "', '" + product.getDefaultCurrency() + "', '" + product.getDescription() + "', '"
+                    + product.getSupplier().getId() + "', '" + product.getProductCategory().getId() + "');";
+            try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+                statement.executeUpdate(query);
+                product.setId(id);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 
     @Override
     public Product find(int id) {
@@ -67,6 +69,28 @@ public class ProductDaoWithJdbc implements ProductDao {
                         result.getString("currency"), result.getString("description"),
                         category, supplier);
                 product.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
+    }
+
+    public Product find(String name) {
+        String query = "SELECT * FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.name ='" + name + "';";
+        Product product = null;
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
+            ResultSet result = statement.executeQuery(query);
+            if (result.next()) {
+                ProductCategory category = new ProductCategory(name, result.getString("department"),
+                        result.getString("description"));
+                category.setId(result.getInt("product_category"));
+                Supplier supplier = new Supplier(name, result.getString("description"));
+                supplier.setId(result.getInt("supplier"));
+                product = new Product(name, result.getInt("default_price"),
+                        result.getString("currency"), result.getString("description"),
+                        category, supplier);
+                product.setId(result.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -32,19 +32,22 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     @Override
     public void add(ProductCategory category) {
         int id;
-        if(getAll().size()!=0){
-            id = getAll().size()+1;
-        }else{
-            id=1;
-        }
-        String query = " INSERT INTO product_categories (id, name, department, description) " +
-                "VALUES ('" + id + "','" + category.getName() + "', '" + category.getDepartment() + "', '"
-                + category.getDescription() + "');";
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
-            statement.executeUpdate(query);
-            category.setId(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<ProductCategory> existingCategories = getAll();
+        if (find(category.getName()) == null) {
+            if (existingCategories.size() != 0) {
+                id = existingCategories.size() + 1;
+            } else {
+                id = 1;
+            }
+            String query = " INSERT INTO product_categories (id, name, department, description) " +
+                    "VALUES ('" + id + "','" + category.getName() + "', '" + category.getDepartment() + "', '"
+                    + category.getDescription() + "');";
+            try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+                statement.executeUpdate(query);
+                category.setId(id);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
