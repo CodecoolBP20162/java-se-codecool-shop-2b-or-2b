@@ -33,10 +33,10 @@ public class ProductDaoWithJdbc implements ProductDao {
     @Override
     public void add(Product product) {
         int id;
-        List<Product> existingSuppliers = getAll();
+        List<Product> existingProducts = getAll();
         if (find(product.getName()) == null) {
-            if (getAll().size() != 0) {
-                id = getAll().size() + 1;
+            if (existingProducts.size() != 0) {
+                id = existingProducts.size() + 1;
             } else {
                 id = 1;
             }

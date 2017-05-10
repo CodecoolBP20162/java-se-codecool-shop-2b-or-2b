@@ -67,6 +67,8 @@ public class Main {
             return "Ok";
         });
 
+
+
         get("/payment", (Request req, Response res) -> {
             System.out.println("/payment root");
             return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res) );
