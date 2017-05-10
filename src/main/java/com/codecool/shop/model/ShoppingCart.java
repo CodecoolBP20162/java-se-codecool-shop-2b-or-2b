@@ -1,6 +1,7 @@
 package com.codecool.shop.model;
 
 import com.codecool.shop.dao.implementation.ProductDaoMem;
+import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class ShoppingCart {
     public void handleAddToCart(int id) {
         Product foundItem = findProductById(id);
         if (foundItem == null) {
-            Product prod = ProductDaoMem.getInstance().find(id);
+            Product prod = ProductDaoWithJdbc.getInstance().find(id);
             LineItem newlineItem = new LineItem(prod);
             setCartItems(newlineItem);
         } else {
