@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <meta name="author" content="Codecool" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="author" content="Codecool"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <title>Codecool Shop</title>
 
@@ -13,11 +13,11 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
@@ -25,8 +25,8 @@
             crossorigin="anonymous"></script>
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/app.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/custom.css" />
-    <link rel="icon" type="image/ico" href="/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/custom.css"/>
+    <link rel="icon" type="image/ico" href="/img/favicon.ico"/>
 </head>
 
 <body>
@@ -39,7 +39,8 @@
 
     <div class="filters">
         <div class="dropdown" id="supplier-filter">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" onclick="index">Filter products by supplier
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" onclick="index">Filter
+                products by supplier
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li th:each="supplier,iterStat : ${suppliers}">
@@ -49,7 +50,8 @@
         </div>
 
         <div class="dropdown" id="category-filter ">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter products by category
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter products by
+                category
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li th:each="category,iterStat : ${categories}">
@@ -57,7 +59,9 @@
                 </li>
             </ul>
         </div>
-
+        <div>
+            <a type="button" id="show-all" class="btn btn-default" href="/">Show all products</a>
+        </div>
         <div class="shopping-cart">
             <label id="cartCounter"></label>
             <img id="cart" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/shoppingcart_icon.png'"
@@ -70,10 +74,12 @@
 
         <div class="item col-xs-4 col-lg-4" th:each="prod,iterStat : ${products}">
             <div class="thumbnail">
-                <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" th:attr="src='/img/product_' + ${prod.id} + '.jpg'" alt="" />
+                <img class="group list-group-image" src="http://placehold.it/400x250/000/fff"
+                     th:attr="src='/img/product_' + ${prod.id} + '.jpg'" alt=""/>
                 <div class="caption">
                     <h4 class="group inner list-group-item-heading" th:text="${prod.name}">Product name</h4>
-                    <p class="group inner list-group-item-text" th:text="${prod.description}">Product description... </p>
+                    <p class="group inner list-group-item-text" th:text="${prod.description}">Product
+                        description... </p>
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
@@ -101,31 +107,39 @@
                         <form id="userData" action="/saveUserData" method="post">
                             <div class="form-group">
                                 <label for="name-input">Name</label>
-                                <input type="text" class="form-control" name="name" id="name-input" placeholder="Name" required="true" />
+                                <input type="text" class="form-control" name="name" id="name-input" placeholder="Name"
+                                       required="true"/>
                             </div>
 
                             <div class="form-group">
                                 <label for="email-input">Email address</label>
-                                <input type="email" class="form-control" name="email" id="email-input" placeholder="Email" required="true" />
+                                <input type="email" class="form-control" name="email" id="email-input"
+                                       placeholder="Email" required="true"/>
                             </div>
 
                             <div class="form-group">
                                 <label for="phone-input">Phone number</label>
-                                <input type="tel" class="form-control" name="phone" id="phone-input" placeholder="Phone number" required="true" />
+                                <input type="tel" class="form-control" name="phone" id="phone-input"
+                                       placeholder="Phone number" required="true"/>
                             </div>
 
                             <div class="form-group">
                                 <label for="address-input">Billing Address</label>
-                                <input type="text" class="form-control" name="billingAddress" id="address-input" placeholder="Billing Address" required="true" />
+                                <input type="text" class="form-control" name="billingAddress" id="address-input"
+                                       placeholder="Billing Address" required="true"/>
                             </div>
 
                             <div class="form-group">
                                 <label for="shipping-input">Shipping Address</label>
-                                <input type="text" class="form-control" name="shippingAddress" id="shipping-input" placeholder="Shipping Address" required="true" />
+                                <input type="text" class="form-control" name="shippingAddress" id="shipping-input"
+                                       placeholder="Shipping Address" required="true"/>
                             </div>
                             <div class="modal-footer">
-                                <button id="paymentButton" type="button" class="btn btn-default" data-dismiss="modal">Payment</button>
-                                <button id="back-to-cart" type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#myModal">Back</button>
+                                <!--<button id="paymentButton" type="button" class="btn btn-default" data-dismiss="modal">Payment</button>-->
+                                <button type="submit" class="btn btn-default">Payment</button>
+                                <button id="back-to-cart" type="button" class="btn btn-default" data-dismiss="modal"
+                                        data-toggle="modal" data-target="#myModal">Back
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -137,30 +151,32 @@
 
 </div>
 
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title"> Shopping cart items: </h4>
-                    <button type="button" class="close" data-dismiss="modal">X</button>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> Shopping cart items: </h4>
+                <button type="button" class="close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <table class="table" id="shoppingcart">
+                    <tr>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div id="total-price">
                 </div>
-                <div class="modal-body">
-                    <table class="table" id="shoppingcart">
-                        <tr>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <div id="total-price">
-                    </div>
-                    <button type="button" id="checkout-button" class="btn btn-default"
-                            data-dismiss="modal" data-toggle="modal" data-target="#userModal">Order selected items</button>
-                    <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping</button>
+                <button type="button" id="checkout-button" class="btn btn-default"
+                        data-dismiss="modal" data-toggle="modal" data-target="#userModal">Order selected items
+                </button>
+                <button type="button" id="keep-shopping" class="btn btn-default" data-dismiss="modal">Keep shopping
+                </button>
 
-                </div>
             </div>
         </div>
     </div>
+</div>
 <div th:replace="footer :: copy"></div>
 
 </body>

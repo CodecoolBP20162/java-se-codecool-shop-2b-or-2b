@@ -3,9 +3,7 @@ package com.codecool.shop.controller;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 import spark.ModelAndView;
@@ -22,9 +20,9 @@ public class ProductController {
     SupplierDao supplierDataStore;
 
     public ProductController() {
-        productDataStore = ProductDaoMem.getInstance();
-        productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        supplierDataStore = SupplierDaoMem.getInstance();
+        productDataStore = ProductDaoWithJdbc.getInstance();
+        productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
+        supplierDataStore = SupplierDaoWithJdbc.getInstance();
     }
 
     private Map<String, Object> createDefaultMap() {
@@ -42,7 +40,11 @@ public class ProductController {
     }
 
     public ModelAndView renderPayment(Request req, Response res) {
+        String customerId = req.params(":id");
+
         Map<String, Object> params = createDefaultMap();
+        params.put("customer_id", customerId);
+
         return new ModelAndView(params, "product/payment");
     }
 

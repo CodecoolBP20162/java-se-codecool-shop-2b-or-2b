@@ -14,4 +14,6 @@ public interface SupplierDao {
     void remove(int id);
 
     List<Supplier> getAll();
+    void clearAll();
+
 }

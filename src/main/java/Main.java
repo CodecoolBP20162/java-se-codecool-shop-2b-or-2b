@@ -1,24 +1,26 @@
+import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.OrderDaoMem;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.*;
+import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.*;
 import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+
 import java.util.List;
+
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        //create postgres DB
+        DBController dbController = new DBController();
+        //test if db works
+        //dbController.add();
 
         // default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -35,37 +37,47 @@ public class Main {
         get("/", new ProductController()::renderProducts, new ThymeleafTemplateEngine());
 
         get("/index", (Request req, Response res) -> {
-           return new ThymeleafTemplateEngine().render( new ProductController().renderProducts(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
         });
 
         get("/supplier/:name", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsBySupplier(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProductsBySupplier(req, res));
         });
 
         get("/category/:name", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProductsByCategory(req, res));
         });
 
         get("/addToCart/:id", (Request req, Response res) -> {
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProducts(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
         });
 
         post("/saveUserData", (Request req, Response res) -> {
-            User newUser = User.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
-            ShoppingCart shoppingCart = ShoppingCart.getInstance();
-            List<LineItem> shoppingCartContent = shoppingCart.getCartItems();
-            OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order newOrder = new Order(shoppingCartContent);
-            orderDataStore.add(newOrder);
-            ShoppingCart.setInstanceToNull(null);
-            ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
+
+            Customer newCustomer = new Customer(
+                    req.queryParams("name"),
+                    req.queryParams("email"),
+                    Integer.valueOf(req.queryParams("phone")),
+                    req.queryParams("billingAddress"),
+                    req.queryParams("shippingAddress"));
+
+            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
+            customerDataStore.add(newCustomer);
+            int customerId = customerDataStore.findByPhoneNumber(newCustomer.getPhoneNumber());
+
+            res.redirect("/payment/" + customerId);
             return "Ok";
         });
 
-        get("/payment", (Request req, Response res) -> {
-            System.out.println("/payment root");
-            return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res) );
+
+        get("/payment/:id", (Request req, Response res) -> {
+            CustomerDaoWithJdbc customerDataStore = CustomerDaoWithJdbc.getInstance();
+            String param = req.params("id");
+            int customerId = Integer.valueOf(param);
+            Customer customer = customerDataStore.find(customerId);
+
+            return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
 
         get("/cart", (Request req, Response res) -> {
@@ -73,7 +85,7 @@ public class Main {
                     .enableExposeMethodResult()
                     .createGsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+                    .create().toJson(ShoppingCart.getInstance().getCartItems());
         });
 
         put("/cart", (Request req, Response res) -> {
@@ -81,13 +93,32 @@ public class Main {
                     .enableExposeMethodResult()
                     .createGsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+                    .create().toJson(ShoppingCart.getInstance().getCartItems());
         });
 
         get("/remove/:id", (Request req, Response res) -> {
             String param = req.params("id");
             int itemId = Integer.valueOf(param);
             ShoppingCart.getInstance().deleteProductById(itemId);
+            return true;
+        });
+
+        post("/save-order", (Request req, Response res) -> {
+            System.out.println("ittvagyunk");
+            System.out.println(req.params("id"));
+/*            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
+            OrderDao orderDataStore = OrderDaoWithJdbc.getInstance();
+            String param = req.params("id");
+            int customerId = Integer.valueOf(param);
+            Customer customer = customerDataStore.find(customerId);
+            Order order = new Order(customer);
+            orderDataStore.add(order);
+            int orderId = order.getId();
+            List<LineItem> orderedItems = order.getOrderedItems().getShoppingCartContent();
+            for (LineItem orderedItem : orderedItems) {
+                orderedItemsDataStore.add(orderId, orderedItem);
+            }*/
+
             return true;
         });
 
@@ -106,7 +137,7 @@ public class Main {
                     .enableExposeMethodResult()
                     .createGsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson( ShoppingCart.getInstance().countItemsInTheCart());
+                    .create().toJson(ShoppingCart.getInstance().countItemsInTheCart());
         });
 
         //Add this line to your project to enable the debug screen
@@ -115,10 +146,9 @@ public class Main {
 
     public static void populateData() {
 
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
-
+        ProductDao productDataStore = ProductDaoWithJdbc.getInstance();
+        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
+        SupplierDao supplierDataStore = SupplierDaoWithJdbc.getInstance();
 
         //setting up a new supplier
         Supplier amazon = new Supplier("Amazon", "Digital content and services");
@@ -126,21 +156,33 @@ public class Main {
         Supplier lenovo = new Supplier("Lenovo", "Computers");
         supplierDataStore.add(lenovo);
         Supplier DELL = new Supplier("DELL", "Computers");
+        supplierDataStore.add(DELL);
 
 
         //setting up a new product category
-        ProductCategory tablet = new ProductCategory("Tablet", "Hardware", "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.");
+        ProductCategory tablet = new ProductCategory("Tablet", "Hardware",
+                "A tablet computer, commonly shortened to tablet, is a thin," +
+                        "flat mobile computer with a touchscreen display.");
         productCategoryDataStore.add(tablet);
-        ProductCategory laptop = new ProductCategory("Laptop", "Hardware", "A portable computer with little weight and long battery life.");
+        ProductCategory laptop = new ProductCategory("Laptop", "Hardware",
+                "A portable computer with little weight and long battery life.");
         productCategoryDataStore.add(laptop);
 
+
         //setting up products and printing it
-        productDataStore.add(new Product("Amazon Fire", 49.9f, "USD", "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", tablet, amazon));
-        productDataStore.add(new Product("Lenovo IdeaPad Miix 700", 479, "USD", "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", tablet, lenovo));
-        productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD", "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", tablet, amazon));
-        productDataStore.add(new Product("Dell Inspiron 5559-I5G159LE", 594, "USD", "Very gut very strong you should buy it, different colors available.", laptop, DELL));
-        productDataStore.add(new Product("msi-apache-pro", 1188, "USD", "Good choice for gaming", laptop, amazon));
+        productDataStore.add(new Product("Amazon Fire", 50, "USD",
+                "Fantastic price. Large content ecosystem. Good parental controls." +
+                        "Helpful technical support.", tablet, amazon));
+        productDataStore.add(new Product("Lenovo IdeaPad Miix 700", 479, "USD",
+                "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports." +
+                        "Adjustable kickstand.", tablet, lenovo));
+        productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD",
+                "Amazons latest Fire HD 8 tablet is a great value for media consumption.",
+                tablet, amazon));
+        productDataStore.add(new Product("Dell Inspiron 5559-I5G159LE", 594, "USD",
+                "Very gut very strong you should buy it, different colors available.", laptop, DELL));
+        productDataStore.add(new Product("msi-apache-pro", 1188, "USD",
+                "Good choice for gaming", laptop, amazon));
+
     }
-
-
 }
