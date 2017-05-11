@@ -41,6 +41,9 @@ public class ProductController {
 
     public ModelAndView renderPayment(Request req, Response res) {
         Map<String, Object> params = createDefaultMap();
+        //Map params = new HashMap<>();
+        //params.put("customer", customerDao.find(1));
+        //params.put("shoppingcart", shoppingCartDataStore);
         return new ModelAndView(params, "product/payment");
     }
 
