@@ -4,9 +4,7 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.CustomerDao;
 import com.codecool.shop.model.Customer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by joker on 2017.05.10..
@@ -46,7 +44,7 @@ public class CustomerDaoWithJdbc implements CustomerDao {
         }
     }
 
-    /*
+
     @Override
     public Customer find(int id) {
         //Returns the customer with the given id in the db
@@ -55,9 +53,12 @@ public class CustomerDaoWithJdbc implements CustomerDao {
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
             if (result.next()) {
-                customer = new Customer(result.getString("name"), result.getString("description"));
-                customer.setId(id);
-                customer.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(customer));
+                customer = new Customer(result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("email"),
+                        result.getString("phone_number"),
+                        result.getString("billing_address"),
+                        result.getString("shipping_address"));
             }
 
         } catch (SQLException e) {
@@ -66,5 +67,5 @@ public class CustomerDaoWithJdbc implements CustomerDao {
 
         return customer;
     }
-    */
+
 }

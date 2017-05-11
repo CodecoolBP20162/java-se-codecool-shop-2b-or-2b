@@ -55,7 +55,7 @@ public class Main {
         });
 
         post("/saveUserData", (Request req, Response res) -> {
-            Customer newCustomer = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
+            Customer newCustomer = Customer.createUser(req.queryParams("id"),req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
             CustomerDaoWithJdbc customerDaoWithJdbc = CustomerDaoWithJdbc.getInstance();
             customerDaoWithJdbc.add(newCustomer);
             ShoppingCart shoppingCart = ShoppingCart.getInstance();

@@ -1,9 +1,13 @@
 package com.codecool.shop.dao.implementation;
 
+import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.OrderedItemsDao;
 import com.codecool.shop.model.LineItem;
 import com.codecool.shop.model.OrderedItems;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -26,38 +30,18 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
     }
 
     @Override
-    public void add(LineItem lineItem) {
-        String query = "INSERT INTO ordered_items (id, name, default_price, currency, description," +
-                        " supplier, product_category) VALUES ('" + id + "','" + product.getName() + "', '" + product.getDefaultPrice()
-                        + "', '" + product.getDefaultCurrency() + "', '" + product.getDescription() + "', '"
-                        + product.getSupplier().getId() + "', '" + product.getProductCategory().getId() + "');
-    }
+    public void add(int id, LineItem orderedItem) {
 
-//    @Override
-//    public void add(Product product) {
-//        int id;
-//        List<Product> existingShoppingCarts = getAll();
-//        List<LineItem> shoppingCartContent = shoppingCart.getCartItems();
-//        for (LineItem lineItem : shoppingCartContent) {
-//            if (find(lineItem.) == null) {
-//                if (existingShoppingCarts.size() != 0) {
-//                    id = existingShoppingCarts.size() + 1;
-//                } else {
-//                    id = 1;
-//                }
-//                String query = "INSERT INTO products (id, name, default_price, currency, description," +
-//                        " supplier, product_category) VALUES ('" + id + "','" + product.getName() + "', '" + product.getDefaultPrice()
-//                        + "', '" + product.getDefaultCurrency() + "', '" + product.getDescription() + "', '"
-//                        + product.getSupplier().getId() + "', '" + product.getProductCategory().getId() + "');";
-//                try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
-//                    statement.executeUpdate(query);
-//                    product.setId(id);
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
+        String query = "INSERT INTO ordered_items (order_id, product_id, quantity)"  +
+                "VALUES ('" + id + "','" + orderedItem.getProduct().getId() + "','" + orderedItem.getQuantity()+"');";
+
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 
@@ -71,11 +55,4 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
         return null;
     }
 
-
-//
-//
-//    @Override
-//    public void remove(int id) {
-//
-//    }
 }

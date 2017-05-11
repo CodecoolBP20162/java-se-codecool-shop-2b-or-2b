@@ -6,6 +6,7 @@ package com.codecool.shop.model;
 public class Order {
     private OrderedItems orderedItems;
     private Customer customer;
+    private int id;
 
 
     public Order(Customer customer) {
@@ -22,11 +23,14 @@ public class Order {
 
     }
 
-
     public OrderedItems getOrderedItems() {
         return orderedItems;
     }
     public Customer getCustomer() {
         return customer;
+    }
+
+    public void setId(int newId){
+        this.id = newId;
     }
 }

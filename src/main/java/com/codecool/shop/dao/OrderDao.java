@@ -2,6 +2,7 @@ package com.codecool.shop.dao;
 
 import com.codecool.shop.model.Order;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,9 +10,9 @@ import java.util.List;
  */
 public interface OrderDao {
 
-    void add(Order order, int customer_id);
+    void add(Order order);
     void clearAll();
-    Order getOrderByCustomerId(int customer_id);
+    ArrayList<Order> getOrdersByCustomerId(int customer_id);
 
 
 

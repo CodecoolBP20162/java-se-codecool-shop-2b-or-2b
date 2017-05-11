@@ -9,7 +9,7 @@ public interface CustomerDao {
 
     void add(Customer customer);
 
-    //Customer find(int id);
+    Customer find(int id);
 
 
 }

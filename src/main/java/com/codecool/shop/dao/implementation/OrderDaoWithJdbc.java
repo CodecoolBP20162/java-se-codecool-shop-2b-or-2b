@@ -4,7 +4,6 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.model.Customer;
 import com.codecool.shop.model.Order;
-import com.codecool.shop.model.Product;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,29 +32,33 @@ public class OrderDaoWithJdbc implements OrderDao{
     }
 
     @Override
-    public void add(Order order, int customer_id){
-        for (order.getOrderedItems().getShoppingCartContent()){
-            String query = "INSERT INTO order (customer_id, total_price)" +
-                "VALUES ('" + customer_id + "','" + order.calculateTotalPrice()+"');";
-            try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
-                statement.executeUpdate(query);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    public void add(Order order){
+        Customer customer = order.getCustomer();
+        String query = "INSERT INTO orders (customer_id, total_price)" + "VALUES ('" + customer.getId() + "','" + order.calculateTotalPrice()+"');";
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
     }
 
 
     @Override
     public void clearAll() {
+        String query = "DELETE FROM orders;";
 
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public Order getOrderByCustomerId(int customer_id) {
+    public ArrayList<Order> getOrdersByCustomerId(int customer_id) {
         String query = "SELECT id FROM orders WHERE customer_id=" + customer_id + ";";
         return queryExecuteHandler(query);
-
     }
 
     @Override
@@ -70,23 +73,19 @@ public class OrderDaoWithJdbc implements OrderDao{
             ResultSet result = statement.executeQuery(query);
             if (result.next()) {
 
-                Customer customer = new Customer(result.getInt("id"),
+                Customer customer = new Customer(result.getInt("customer_id"),
                         result.getString("name"),
                         result.getString("email"),
                         result.getString("phone_number"),
                         result.getString("billing_address"),
                         result.getString("shipping_address"));
                 order = new Order(customer);
-                supplier.setId(result.getInt("supplier"));
-                product = new Product(name, result.getInt("default_price"),
-                        result.getString("currency"), result.getString("description"),
-                        category, supplier);
-                product.setId(result.getInt("id"));
+                order.setId(result.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return product;
+        return order;
     }
 
     private ArrayList<Order> queryExecuteHandler(String query) {
@@ -96,9 +95,9 @@ public class OrderDaoWithJdbc implements OrderDao{
             while (result.next()) {
                 Order order = find(result.getInt("id"));
                 order.setId(result.getInt("id"));
-                allProducts.add(product);
+                allOrders.add(order);
             }
-            return allProducts;
+            return allOrders;
         } catch (SQLException e) {
             e.printStackTrace();
         }
