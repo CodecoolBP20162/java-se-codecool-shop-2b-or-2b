@@ -8,12 +8,12 @@ import java.util.List;
  */
 public class Customer extends Person {
     private List<Order> orders = new ArrayList<>();
-    private String phoneNumber;
+    private Integer phoneNumber;
     private String billingAddress;
     private String shippingAddress;
 
 
-    public Customer(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
+    public Customer(String name, String email, Integer phoneNumber, String billingAddress, String shippingAddress) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -22,7 +22,7 @@ public class Customer extends Person {
     }
 
 
-    public String getPhoneNumber() {
+    public int getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -33,8 +33,6 @@ public class Customer extends Person {
     public String getShippingAddress() {
         return shippingAddress;
     }
-
-    public int getId(){return id;}
 
     public void setOrders(Order order) {
         orders.add(order);

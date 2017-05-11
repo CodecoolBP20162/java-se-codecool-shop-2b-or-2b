@@ -1,9 +1,6 @@
 import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.*;
 import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.*;
 import io.gsonfire.GsonFireBuilder;
@@ -57,25 +54,29 @@ public class Main {
         });
 
         post("/saveUserData", (Request req, Response res) -> {
-            Customer newCustomer = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
 
-            CustomerDaoWithJdbc customerDaoWithJdbc = CustomerDaoWithJdbc.getInstance();
-            customerDaoWithJdbc.add(newCustomer);
-            ShoppingCart shoppingCart = ShoppingCart.getInstance();
-            List<LineItem> shoppingCartContent = shoppingCart.getCartItems();
-            OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order newOrder = new Order(shoppingCartContent);
-            orderDataStore.add(newOrder);
-            ShoppingCart.setInstanceToNull(null);
-            ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
-            res.redirect("/payment");
+            Customer newCustomer = new Customer(
+                    req.queryParams("name"),
+                    req.queryParams("email"),
+                    Integer.valueOf(req.queryParams("phone")),
+                    req.queryParams("billingAddress"),
+                    req.queryParams("shippingAddress"));
+
+            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
+            customerDataStore.add(newCustomer);
+            int customerId = customerDataStore.findByPhoneNumber(newCustomer.getPhoneNumber());
+
+            res.redirect("/payment/" + customerId);
             return "Ok";
         });
 
 
+        get("/payment/:id", (Request req, Response res) -> {
+            CustomerDaoWithJdbc customerDataStore = CustomerDaoWithJdbc.getInstance();
+            String param = req.params("id");
+            int customerId = Integer.valueOf(param);
+            Customer customer = customerDataStore.find(customerId);
 
-        get("/payment", (Request req, Response res) -> {
-            System.out.println("/payment root");
             return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
 
@@ -99,6 +100,25 @@ public class Main {
             String param = req.params("id");
             int itemId = Integer.valueOf(param);
             ShoppingCart.getInstance().deleteProductById(itemId);
+            return true;
+        });
+
+        post("/save-order", (Request req, Response res) -> {
+            System.out.println("ittvagyunk");
+            System.out.println(req.params("id"));
+/*            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
+            OrderDao orderDataStore = OrderDaoWithJdbc.getInstance();
+            String param = req.params("id");
+            int customerId = Integer.valueOf(param);
+            Customer customer = customerDataStore.find(customerId);
+            Order order = new Order(customer);
+            orderDataStore.add(order);
+            int orderId = order.getId();
+            List<LineItem> orderedItems = order.getOrderedItems().getShoppingCartContent();
+            for (LineItem orderedItem : orderedItems) {
+                orderedItemsDataStore.add(orderId, orderedItem);
+            }*/
+
             return true;
         });
 

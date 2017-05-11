@@ -40,10 +40,11 @@ public class ProductController {
     }
 
     public ModelAndView renderPayment(Request req, Response res) {
+        String customerId = req.params(":id");
+
         Map<String, Object> params = createDefaultMap();
-        //Map params = new HashMap<>();
-        //params.put("customer", customerDao.find(1));
-        //params.put("shoppingcart", shoppingCartDataStore);
+        params.put("customer_id", customerId);
+
         return new ModelAndView(params, "product/payment");
     }
 

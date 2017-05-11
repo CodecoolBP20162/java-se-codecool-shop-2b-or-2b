@@ -32,6 +32,17 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
+    public void clearAll() {
+        DATA.clear();
+
+    }
+
+    @Override
+    public ArrayList<Order> getOrdersByCustomerId(int customer_id) {
+        return null;
+    }
+
+    @Override
     public List<Order> getShoppingCartContent(){
         return DATA;
     }
