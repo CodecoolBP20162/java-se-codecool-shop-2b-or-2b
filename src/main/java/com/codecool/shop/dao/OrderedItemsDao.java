@@ -1,15 +1,15 @@
 package com.codecool.shop.dao;
 
-import com.codecool.shop.model.ShoppingCart;
+import com.codecool.shop.model.LineItem;
+import com.codecool.shop.model.OrderedItems;
 
 import java.util.List;
 
 /**
  * Created by joker on 2017.05.10..
  */
-public interface ShoppingCartDao {
-    void add(ShoppingCart shoppingCart);
-    ShoppingCart find(int id);
-    void remove(int id);
-    List<ShoppingCart> getAll();
+public interface OrderedItemsDao {
+    void add(LineItem lineItem);
+    void clearAll();
+    List<OrderedItems> getByOrderId(int id);
 }

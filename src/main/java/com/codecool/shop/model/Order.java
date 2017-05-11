@@ -1,20 +1,32 @@
 package com.codecool.shop.model;
 
-import java.util.List;
-
 /**
  * Created by joker on 2017.04.25..
  */
 public class Order {
-    private List<LineItem> shoppingCartContent;
+    private OrderedItems orderedItems;
+    private Customer customer;
 
 
-    public Order(List<LineItem> lineItemList) {
-        this.shoppingCartContent = lineItemList;
+    public Order(Customer customer) {
+        this.customer = customer;
+        this.orderedItems = new OrderedItems();
     }
 
-    public List<LineItem> getShoppingCartContent() {
-        return shoppingCartContent;
+    public Integer calculateTotalPrice(){
+        float totalPrice = 0;
+        for (LineItem lineItem : orderedItems.getShoppingCartContent()){
+            totalPrice += lineItem.calculatePrice();
+        }
+        return Math.round(totalPrice);
+
     }
 
+
+    public OrderedItems getOrderedItems() {
+        return orderedItems;
+    }
+    public Customer getCustomer() {
+        return customer;
+    }
 }

@@ -9,7 +9,11 @@ import java.util.List;
  */
 public interface OrderDao {
 
-    void add(Order order);
+    void add(Order order, int customer_id);
+    void clearAll();
+    Order getOrderByCustomerId(int customer_id);
+
+
 
     List<Order> getShoppingCartContent();
 
