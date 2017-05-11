@@ -1,13 +1,13 @@
-package com.codecool.shop.dao.implementation;
+package com.codecool.shop.dao.shop;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by kata on 2017.05.10..
  */
-class ProductDaoWithJdbcTest {
+class ProductCategoryDaoWithJdbcTest {
+
     @Test
     void add() {
     }
@@ -26,14 +26,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void getAll() {
-    }
-
-    @Test
-    void getBy() {
-    }
-
-    @Test
-    void getBy1() {
     }
 
 }
