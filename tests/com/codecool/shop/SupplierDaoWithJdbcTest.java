@@ -27,7 +27,7 @@ class SupplierDaoWithJdbcTest {
     Supplier vegetarian;
 
     @Test
-    void add() {
+    void add_addsNewSupplierToDatabase() {
         setUp();
         Supplier healthian = new Supplier("healthian",
                 "Delivers all kinds of healthy stuff like seeds and grass");

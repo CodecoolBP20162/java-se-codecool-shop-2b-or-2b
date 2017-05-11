@@ -35,7 +35,7 @@ class ProductDaoWithJdbcTest {
 
 
     @Test
-    void add() {
+    void add_addsNewProductToDatabase() {
         setUp();
         Product product4 = new Product("brokkoli", 50, "USD",
                 "Healthy stuff", zoldseg, zoldseges);
@@ -70,7 +70,7 @@ class ProductDaoWithJdbcTest {
     }
 
     @Test
-    void remove() {
+    void remove_removesProductFromDatabaseBasedOnId() {
         setUp();
         productDataStore.remove(1);
 
@@ -80,7 +80,7 @@ class ProductDaoWithJdbcTest {
     }
 
     @Test
-    void getAll() {
+    void getAll_() {
         setUp();
         List<Product> allProducts = Arrays.asList(product1, product2, product3);
 
@@ -116,21 +116,26 @@ class ProductDaoWithJdbcTest {
     public void setUp() {
 
         tearDown();
-        gyumolcsos = new Supplier("gyumolcsos", "Computers");
+        gyumolcsos = new Supplier("gyumolcsos", "Fruity guy");
         supplierDataStore.add(gyumolcsos);
-        zoldseges = new Supplier("zoldseges", "Digital content and services");
+        zoldseges = new Supplier("zoldseges", "Person with vegetables");
         supplierDataStore.add(zoldseges);
 
-        gyumolcs = new ProductCategory("Gyumolcs", "Hardware", "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.");
+        gyumolcs = new ProductCategory("Gyumolcs", "Hardware",
+                "Colorful stuff.");
         productCategoryDataStore.add(gyumolcs);
-        zoldseg = new ProductCategory("Zoldseg", "Hardware", "A portable computer with little weight and long battery life.");
+        zoldseg = new ProductCategory("Zoldseg", "Hardware",
+                "Green stuff.");
         productCategoryDataStore.add(zoldseg);
 
-        product1 = new Product("alma", 50, "USD", "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", gyumolcs, gyumolcsos);
+        product1 = new Product("alma", 50, "USD",
+                "Tasty", gyumolcs, gyumolcsos);
         productDataStore.add(product1);
-        product2 = new Product("korte", 479, "USD", "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", gyumolcs, gyumolcsos);
+        product2 = new Product("korte", 479, "USD",
+                "Dont like it. Hurts teeths", gyumolcs, gyumolcsos);
         productDataStore.add(product2);
-        product3 = new Product("repa", 89, "USD", "Amazons latest Fire HD 8 tablet is a great value for media consumption.", zoldseg, zoldseges);
+        product3 = new Product("repa", 89, "USD",
+                "Fav thing of bunnies.", zoldseg, zoldseges);
         productDataStore.add(product3);
 
     }
