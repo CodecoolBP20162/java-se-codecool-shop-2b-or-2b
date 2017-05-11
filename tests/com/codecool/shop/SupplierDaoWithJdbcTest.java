@@ -1,12 +1,12 @@
 package com.codecool.shop;
 
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SupplierDaoWithJdbcTest {
 
-    ProductDaoWithJdbc productDataStore = ProductDaoWithJdbc.getInstance();
-    SupplierDaoWithJdbc supplierDataStore = SupplierDaoWithJdbc.getInstance();
-    ProductCategoryDaoWithJdbc productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
+    ProductDao productDataStore = ProductDaoWithJdbc.getInstance();
+    SupplierDao supplierDataStore = SupplierDaoWithJdbc.getInstance();
+    ProductCategoryDao productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
 
     Supplier fruitarian;
     Supplier vegetarian;
@@ -50,12 +50,30 @@ class SupplierDaoWithJdbcTest {
     }
 
     @Test
+    void find_searchesProductsByIdNotPresent_returnsNull() {
+        setUp();
+
+        assertNull(supplierDataStore.find(100));
+
+        tearDown();
+    }
+
+    @Test
     void find_findsSupplierBasedOnName() {
         setUp();
         String supplierName = fruitarian.getName();
         Supplier foundSupplier = supplierDataStore.find(supplierName);
 
         assertEquals(supplierName, foundSupplier.getName());
+
+        tearDown();
+    }
+
+    @Test
+    void find_searchesProductsByNameNotPresent_returnsNull() {
+        setUp();
+
+        assertNull(supplierDataStore.find("abraka"));
 
         tearDown();
     }

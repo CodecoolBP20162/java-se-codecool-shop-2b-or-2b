@@ -49,4 +49,9 @@ public class ProductCategoryDaoMem implements ProductCategoryDao {
     public List<ProductCategory> getAll() {
         return DATA;
     }
+
+    @Override
+    public void clearAll() {
+        DATA.clear();
+    }
 }

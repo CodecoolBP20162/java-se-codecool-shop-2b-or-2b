@@ -115,6 +115,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         }
     }
 
+    @Override
     public void clearAll() {
         String query = "DELETE FROM suppliers;";
 

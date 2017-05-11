@@ -69,13 +69,17 @@ public class ProductDaoWithJdbc implements ProductDao {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
-                ProductCategory category = new ProductCategory(result.getString("pc_name"), result.getString("department"),
+                ProductCategory category = new ProductCategory(result.getString("pc_name"),
+                        result.getString("department"),
                         result.getString("description"));
                 category.setId(result.getInt("product_category"));
-                Supplier supplier = new Supplier(result.getString("s_name"), result.getString("description"));
+                Supplier supplier = new Supplier(result.getString("s_name"),
+                        result.getString("description"));
                 supplier.setId(result.getInt("supplier"));
-                product = new Product(result.getString("p_name"), result.getInt("default_price"),
-                        result.getString("currency"), result.getString("description"),
+                product = new Product(result.getString("p_name"),
+                        result.getInt("default_price"),
+                        result.getString("currency"),
+                        result.getString("description"),
                         category, supplier);
                 product.setId(id);
             }
@@ -149,6 +153,7 @@ public class ProductDaoWithJdbc implements ProductDao {
         return queryExecuteHandler(query);
     }
 
+    @Override
     public void clearAll() {
         String query = "DELETE FROM products;";
 

@@ -1,5 +1,8 @@
 package com.codecool.shop;
 
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
@@ -21,9 +24,9 @@ class ProductCategoryDaoWithJdbcTest {
     ProductCategory vegetables;
     ProductCategory fruits;
 
-    ProductDaoWithJdbc productDataStore = ProductDaoWithJdbc.getInstance();
-    SupplierDaoWithJdbc supplierDataStore = SupplierDaoWithJdbc.getInstance();
-    ProductCategoryDaoWithJdbc productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
+    ProductDao productDataStore = ProductDaoWithJdbc.getInstance();
+    SupplierDao supplierDataStore = SupplierDaoWithJdbc.getInstance();
+    ProductCategoryDao productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
 
     @Test
     void add_addsNewProductCategoryToDatabase() {
@@ -49,12 +52,30 @@ class ProductCategoryDaoWithJdbcTest {
     }
 
     @Test
+    void find_searchesProductCategoryByIdNotPresent_returnsNull() {
+        setUp();
+
+        assertNull(productCategoryDataStore.find(100));
+
+        tearDown();
+    }
+
+    @Test
     void find_findsProductCategoryByName() {
         setUp();
         String productCategoryName = fruits.getName();
         ProductCategory foundProductCategory = productCategoryDataStore.find(productCategoryName);
 
         assertEquals(productCategoryName, foundProductCategory.getName());
+
+        tearDown();
+    }
+
+    @Test
+    void find_searchesProductCategoryByNameNotPresent_returnsNull() {
+        setUp();
+
+        assertNull(productCategoryDataStore.find("abraka"));
 
         tearDown();
     }
@@ -82,9 +103,9 @@ class ProductCategoryDaoWithJdbcTest {
 
     private void setUp() {
         tearDown();
-        fruits = new ProductCategory("fruits", "Hardware", "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.");
+        fruits = new ProductCategory("fruits", "Hardware", "Colorful tasty stuff");
         productCategoryDataStore.add(fruits);
-        vegetables = new ProductCategory("vegetables", "Hardware", "A portable computer with little weight and long battery life.");
+        vegetables = new ProductCategory("vegetables", "Hardware", "pfejjj");
         productCategoryDataStore.add(vegetables);
     }
 

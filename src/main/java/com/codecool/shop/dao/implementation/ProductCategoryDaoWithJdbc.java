@@ -141,6 +141,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return null;
     }
 
+    @Override
     public void clearAll() {
         String query = "DELETE FROM product_categories;";
 

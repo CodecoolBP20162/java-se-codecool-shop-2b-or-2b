@@ -1,5 +1,8 @@
 package com.codecool.shop;
 
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
@@ -21,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class ProductDaoWithJdbcTest {
 
-    ProductDaoWithJdbc productDataStore = ProductDaoWithJdbc.getInstance();
-    SupplierDaoWithJdbc supplierDataStore = SupplierDaoWithJdbc.getInstance();
-    ProductCategoryDaoWithJdbc productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
+    ProductDao productDataStore = ProductDaoWithJdbc.getInstance();
+    SupplierDao supplierDataStore = SupplierDaoWithJdbc.getInstance();
+    ProductCategoryDao productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
 
     Supplier gyumolcsos;
     Supplier zoldseges;
@@ -59,6 +62,16 @@ class ProductDaoWithJdbcTest {
     }
 
     @Test
+    void find_searchesProductsByIdNotPresent_returnsNull() {
+        setUp();
+
+        assertNull(productDataStore.find(100));
+
+        tearDown();
+    }
+
+
+    @Test
     void find_findsProductBasedOnName() {
         setUp();
         String productName = product1.getName();
@@ -68,6 +81,16 @@ class ProductDaoWithJdbcTest {
 
         tearDown();
     }
+
+    @Test
+    void find_searchesProductsByNameNotPresent_returnsNull() {
+        setUp();
+
+        assertNull(productDataStore.find("abraka"));
+
+        tearDown();
+    }
+
 
     @Test
     void remove_removesProductFromDatabaseBasedOnId() {
