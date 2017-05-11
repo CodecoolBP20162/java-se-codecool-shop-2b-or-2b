@@ -6,6 +6,7 @@ import com.codecool.shop.model.Customer;
 
 import java.sql.*;
 
+
 /**
  * Created by joker on 2017.05.10..
  */
@@ -68,4 +69,5 @@ public class CustomerDaoWithJdbc implements CustomerDao {
         return customer;
     }
 
+}
 }

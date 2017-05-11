@@ -11,10 +11,9 @@ public class Customer extends Person {
     private String phoneNumber;
     private String billingAddress;
     private String shippingAddress;
-    private int id;
 
-    public Customer(int id, String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
-        this.id = id;
+
+    public Customer(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -22,10 +21,6 @@ public class Customer extends Person {
         this.shippingAddress = shippingAddress;
     }
 
-    public static Customer createUser(int id, String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
-        Customer newCustomer = new Customer(id, name, email, phoneNumber, billingAddress, shippingAddress);
-        return newCustomer;
-    }
 
     public String getPhoneNumber() {
         return phoneNumber;
