@@ -57,9 +57,9 @@ public class Main {
         });
 
         post("/saveUserData", (Request req, Response res) -> {
-            Customer newUser = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"),
-                    req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
-            Customer newCustomer = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
+
+            Customer newCustomer = new Customer(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
+
             CustomerDaoWithJdbc customerDaoWithJdbc = CustomerDaoWithJdbc.getInstance();
             customerDaoWithJdbc.add(newCustomer);
             ShoppingCart shoppingCart = ShoppingCart.getInstance();
@@ -73,10 +73,12 @@ public class Main {
             return "Ok";
         });
 
+
         get("/payment/:id", (Request req, Response res) -> {
             String param = req.params("id");
             int customerId = Integer.valueOf(param);
             Customer customer = customerDataStore.find(customerId);
+
             return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
 
