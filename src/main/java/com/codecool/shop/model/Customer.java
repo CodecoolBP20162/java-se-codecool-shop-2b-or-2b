@@ -6,13 +6,13 @@ import java.util.List;
 /**
  * Created by joker on 2017.04.25..
  */
-public class User extends Person {
+public class Customer extends Person {
     private List<Order> orders = new ArrayList<>();
     private String phoneNumber;
     private String billingAddress;
     private String shippingAddress;
 
-    User(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
+    Customer(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -20,9 +20,21 @@ public class User extends Person {
         this.shippingAddress = shippingAddress;
     }
 
-    public static User createUser(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
-        User newUser = new User(name, email, phoneNumber, billingAddress, shippingAddress);
-        return newUser;
+    public static Customer createUser(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
+        Customer newCustomer = new Customer(name, email, phoneNumber, billingAddress, shippingAddress);
+        return newCustomer;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
     public void setOrders(Order order) {
@@ -31,7 +43,7 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Customer{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", orders=" + orders +
