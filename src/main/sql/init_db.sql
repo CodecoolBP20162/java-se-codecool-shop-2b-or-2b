@@ -29,17 +29,9 @@ CREATE TABLE products
   supplier integer REFERENCES suppliers (id)
 );
 
-CREATE TABLE ordered_items
-(
-  id integer PRIMARY KEY,
-  product integer REFERENCES products (id),
-  quantity integer,
-  price integer
-);
-
 CREATE TABLE customers
 (
-  id integer PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name varchar(100),
   email varchar(100),
   phone_number integer,
@@ -49,7 +41,15 @@ CREATE TABLE customers
 
 CREATE TABLE orders
 (
-  id integer PRIMARY KEY,
-  customer integer REFERENCES customers (id),
-  ordered_items integer REFERENCES ordered_items (id)
+  id SERIAL PRIMARY KEY,
+  customer_id integer REFERENCES customers (id),
+  total_price integer
+);
+
+CREATE TABLE ordered_items
+(
+  id  SERIAL PRIMARY KEY,
+  order_id integer REFERENCES  orders(id),
+  product_id integer REFERENCES products (id),
+  quantity integer
 );

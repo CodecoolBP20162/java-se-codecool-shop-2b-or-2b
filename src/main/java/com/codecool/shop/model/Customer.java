@@ -12,7 +12,8 @@ public class Customer extends Person {
     private String billingAddress;
     private String shippingAddress;
 
-    Customer(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
+
+    public Customer(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -20,10 +21,6 @@ public class Customer extends Person {
         this.shippingAddress = shippingAddress;
     }
 
-    public static Customer createUser(String name, String email, String phoneNumber, String billingAddress, String shippingAddress) {
-        Customer newCustomer = new Customer(name, email, phoneNumber, billingAddress, shippingAddress);
-        return newCustomer;
-    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -36,6 +33,8 @@ public class Customer extends Person {
     public String getShippingAddress() {
         return shippingAddress;
     }
+
+    public int getId(){return id;}
 
     public void setOrders(Order order) {
         orders.add(order);
