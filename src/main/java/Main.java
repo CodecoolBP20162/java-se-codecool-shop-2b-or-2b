@@ -10,7 +10,9 @@ import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+
 import java.util.List;
+
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
@@ -38,23 +40,25 @@ public class Main {
         get("/", new ProductController()::renderProducts, new ThymeleafTemplateEngine());
 
         get("/index", (Request req, Response res) -> {
-           return new ThymeleafTemplateEngine().render( new ProductController().renderProducts(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
         });
 
         get("/supplier/:name", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsBySupplier(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProductsBySupplier(req, res));
         });
 
         get("/category/:name", (Request req, Response res) -> {
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProductsByCategory(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProductsByCategory(req, res));
         });
 
         get("/addToCart/:id", (Request req, Response res) -> {
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
-            return new ThymeleafTemplateEngine().render( new ProductController().renderProducts(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
         });
 
         post("/saveUserData", (Request req, Response res) -> {
+            User newUser = User.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"),
+                    req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
             Customer newCustomer = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
             CustomerDaoWithJdbc customerDaoWithJdbc = CustomerDaoWithJdbc.getInstance();
             customerDaoWithJdbc.add(newCustomer);
@@ -71,7 +75,7 @@ public class Main {
 
         get("/payment", (Request req, Response res) -> {
             System.out.println("/payment root");
-            return new ThymeleafTemplateEngine().render( new ProductController().renderPayment(req, res) );
+            return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
 
         get("/cart", (Request req, Response res) -> {
@@ -79,7 +83,7 @@ public class Main {
                     .enableExposeMethodResult()
                     .createGsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+                    .create().toJson(ShoppingCart.getInstance().getCartItems());
         });
 
         put("/cart", (Request req, Response res) -> {
@@ -87,7 +91,7 @@ public class Main {
                     .enableExposeMethodResult()
                     .createGsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson( ShoppingCart.getInstance().getCartItems());
+                    .create().toJson(ShoppingCart.getInstance().getCartItems());
         });
 
         get("/remove/:id", (Request req, Response res) -> {
@@ -112,7 +116,7 @@ public class Main {
                     .enableExposeMethodResult()
                     .createGsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson( ShoppingCart.getInstance().countItemsInTheCart());
+                    .create().toJson(ShoppingCart.getInstance().countItemsInTheCart());
         });
 
         //Add this line to your project to enable the debug screen
@@ -125,7 +129,6 @@ public class Main {
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
         SupplierDao supplierDataStore = SupplierDaoWithJdbc.getInstance();
 
-
         //setting up a new supplier
         Supplier amazon = new Supplier("Amazon", "Digital content and services");
         supplierDataStore.add(amazon);
@@ -135,21 +138,30 @@ public class Main {
         supplierDataStore.add(DELL);
 
 
-
         //setting up a new product category
-        ProductCategory tablet = new ProductCategory("Tablet", "Hardware", "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.");
+        ProductCategory tablet = new ProductCategory("Tablet", "Hardware",
+                "A tablet computer, commonly shortened to tablet, is a thin," +
+                        "flat mobile computer with a touchscreen display.");
         productCategoryDataStore.add(tablet);
-        ProductCategory laptop = new ProductCategory("Laptop", "Hardware", "A portable computer with little weight and long battery life.");
+        ProductCategory laptop = new ProductCategory("Laptop", "Hardware",
+                "A portable computer with little weight and long battery life.");
         productCategoryDataStore.add(laptop);
 
 
         //setting up products and printing it
-        productDataStore.add(new Product("Amazon Fire", 50, "USD", "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", tablet, amazon));
-        productDataStore.add(new Product("Lenovo IdeaPad Miix 700", 479, "USD", "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", tablet, lenovo));
-        productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD", "Amazons latest Fire HD 8 tablet is a great value for media consumption.", tablet, amazon));
-        productDataStore.add(new Product("Dell Inspiron 5559-I5G159LE", 594, "USD", "Very gut very strong you should buy it, different colors available.", laptop, DELL));
-        productDataStore.add(new Product("msi-apache-pro", 1188, "USD", "Good choice for gaming", laptop, amazon));
+        productDataStore.add(new Product("Amazon Fire", 50, "USD",
+                "Fantastic price. Large content ecosystem. Good parental controls." +
+                        "Helpful technical support.", tablet, amazon));
+        productDataStore.add(new Product("Lenovo IdeaPad Miix 700", 479, "USD",
+                "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports." +
+                        "Adjustable kickstand.", tablet, lenovo));
+        productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD",
+                "Amazons latest Fire HD 8 tablet is a great value for media consumption.",
+                tablet, amazon));
+        productDataStore.add(new Product("Dell Inspiron 5559-I5G159LE", 594, "USD",
+                "Very gut very strong you should buy it, different colors available.", laptop, DELL));
+        productDataStore.add(new Product("msi-apache-pro", 1188, "USD",
+                "Good choice for gaming", laptop, amazon));
+
     }
-
-
 }

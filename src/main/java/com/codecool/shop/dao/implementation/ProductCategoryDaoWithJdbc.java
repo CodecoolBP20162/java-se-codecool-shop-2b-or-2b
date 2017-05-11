@@ -33,7 +33,9 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     public void add(ProductCategory category) {
         int id;
         List<ProductCategory> existingCategories = getAll();
+
         if (find(category.getName()) == null) {
+
             if (existingCategories.size() != 0) {
                 id = existingCategories.size() + 1;
             } else {
@@ -42,7 +44,9 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             String query = " INSERT INTO product_categories (id, name, department, description) " +
                     "VALUES ('" + id + "','" + category.getName() + "', '" + category.getDepartment() + "', '"
                     + category.getDescription() + "');";
-            try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+
+            try (Connection connection = DBController.getConnection();
+                 Statement statement = connection.createStatement()) {
                 statement.executeUpdate(query);
                 category.setId(id);
             } catch (SQLException e) {
@@ -55,17 +59,20 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     public ProductCategory find(int id) {
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE id ='" + id + "';";
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
-        {
+
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
+
             if (result.next()) {
 
-                category = new ProductCategory(result.getString("name"), result.getString("department"),
+                category = new ProductCategory(result.getString("name"),
+                        result.getString("department"),
                         result.getString("description"));
                 category.setId(id);
                 category.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(category));
 
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,12 +83,14 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     public ProductCategory find(String name) {
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE name ='" + name + "';";
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
-        {
+
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
+
             if (result.next()) {
 
-                category = new ProductCategory(name, result.getString("department"),
+                category = new ProductCategory(name,
+                        result.getString("department"),
                         result.getString("description"));
                 category.setId(result.getInt("id"));
                 category.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(category));
@@ -90,6 +99,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return category;
 
     }
@@ -97,8 +107,8 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     @Override
     public void remove(int id) {
         String query = "DELETE FROM product_categories WHERE id='" + id + "';";
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement())
-        {
+
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,18 +119,37 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     public List<ProductCategory> getAll() {
         List<ProductCategory> allCategories = new ArrayList<>();
         String query = "SELECT * FROM product_categories;";
+
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
+
             while (result.next()) {
                 ProductCategory current = new ProductCategory(result.getString("name"),
-                        result.getString("department"), result.getString("description"));
+                        result.getString("department"),
+                        result.getString("description"));
                 current.setId(result.getInt("id"));
                 current.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(current));
                 allCategories.add(current);
             }
+
             return allCategories;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;    }
+
+        return null;
+    }
+
+    @Override
+    public void clearAll() {
+        String query = "DELETE FROM product_categories;";
+
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
