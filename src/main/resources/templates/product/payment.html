@@ -34,42 +34,17 @@
 
     <div class="container">
         <div>
-            Fizetendő: 7 217Ft
-            A ténylegesen fizetendő ár eltérhet a mérlegelt és a helyettesítő termékek függvényében
         </div>
-        <!--
-                <div class="container">
-                    <table class="table">
-                        <tbody>
-                        <tr><td><h3>Your Data</h3></td></tr>
-                        <tr><td><h6>First name: </h6></td><td th:text="${customer.getFirstName()}">Name</td><td><h6>Last name: </h6></td><td th:text="${customer.getLastName()}">Last</td></tr>
-                        <tr><td><h6>Email: </h6></td><td th:text="${customer.getEmail()}">email</td><td><h6>Phonenumber: </h6></td><td th:text="${customer.getPhoneNumber()}">phone</td></tr>
-
-                        <tr><td><h4>Billing Address: </h4></td><td></td><td><h4>Shipping Address: </h4></td></tr>
-                        <tr><td><h6>Country: </h6></td><td th:text="${customer.getBillingAddress().country}">country</td><td><h6>Country: </h6></td><td th:text="${customer.getShippingAddress().country}">country</td></tr>
-                        <tr><td><h6>City: </h6></td><td th:text="${customer.getBillingAddress().city}">city</td><td><h6>City:</h6></td><td th:text="${customer.getShippingAddress().city}">city</td></tr>
-                        <tr><td><h6>Zip code: </h6></td><td th:text="${customer.getBillingAddress().zipcode}">zipcode</td><td><h6>Zip code: </h6></td><td  th:text="${customer.getShippingAddress().zipcode}">zipcode</td></tr>
-                        <tr><td><h6>Street with number: </h6></td><td th:text="${customer.getBillingAddress().address}">street</td><td><h6>Street with number: </h6></td><td  th:text="${customer.getShippingAddress().address}">street</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                -->
 
         <table class="table">
             <thead>
             <tr><td><h3>Choose payment method</h3></td></tr>
-            <!--
-            <tr>
-                <th>by Credit card</th>
-                <th>via Pay pal</th>
-            </tr>
-            -->
             </thead>
             <tbody>
             <div class="item col-xs-4 col-lg-4">
                 <tr>
                     <th><img id="creditcard" src="img/mastercard.png" th:attr="src='/img/mastercard.png'" alt="credit card button"
-                             width="300" data-toggle="modal" data-target="#creditcardModal"/></th>
+                             width="300"/></th>
                     <th><img src="img/paypal.png" th:attr="src='/img/paypal.png'" alt="pay pal" width="300"/></th>
                 </tr>
                 <tr>
@@ -120,7 +95,6 @@
                             </div>
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-default">Cancel</button>
                                 <button type="submit" class="btn btn-default">Finish payment</button>
                             </div>
                         </form>
@@ -153,7 +127,7 @@
                             </div>
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-default">Cancel</button>
+                                <!--<button type="submit" class="btn btn-default">Cancel</button>-->
                                 <button type="submit" class="btn btn-default">Finish payment</button>
                             </div>
                         </form>
