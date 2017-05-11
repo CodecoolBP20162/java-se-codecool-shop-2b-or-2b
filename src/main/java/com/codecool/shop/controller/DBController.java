@@ -19,26 +19,4 @@ public class DBController {
                 DB_PASSWORD);
     }
 
-    /*
-    public void add() {
-        String name = "Liza";
-        String age = "21";
-        String query = "INSERT INTO products (name, age) " +
-                "VALUES ('" + name + "', '" + age + "');";
-        executeQuery(query);
-        System.out.println("ok");
-    }
-    */
-
-    private void executeQuery(String query) {
-        try (Connection connection = getConnection();
-             Statement statement =connection.createStatement();
-        ){
-            statement.execute(query);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
