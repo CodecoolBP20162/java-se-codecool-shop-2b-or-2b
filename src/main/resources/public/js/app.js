@@ -39,6 +39,25 @@ $(document).ready(function () {
         disableCheckButton(itemId);
     });
 
+    $("#paypalModal").on('focus', 'button.submit_payment', function () {
+        var id = obtainCustomerIdFromHref();
+        var url = "/save-order";
+        var message = {"id": id};
+        $.post(url, JSON.stringify(message), function (data) {
+        })
+    });
+
+
+    $(".submit_payment").click(function(event){
+        event.preventDefault();
+        var id = obtainCustomerIdFromHref();
+        var url = "/save-order";
+        var message = {"id": id};
+        $.post(url, JSON.stringify(message), function (data) {
+        });
+
+    });
+
     $("#paymentButton").click(function (event) {
         event.preventDefault();
         var name = $("#name-input").val();
@@ -51,6 +70,12 @@ $(document).ready(function () {
     });
 
 });
+
+function obtainCustomerIdFromHref() {
+    var href_split = window.location.href.split('/');
+    var id = board_split[board_split.length - 1];
+    return id;
+}
 
 function renderItemData(item) {
     $('#empty-message').remove();
@@ -72,8 +97,6 @@ function cartCounter() {
     var counter = "/counter";
     $.get(counter, function (data) {
         var cartItems = JSON.parse(data);
-        console.log(cartItems)
-        // $("#cartCounter").val(cartItems);
         $("#cartCounter").empty();
         $("#cartCounter").append(cartItems);
     });

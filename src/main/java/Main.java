@@ -1,9 +1,6 @@
 import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.*;
 import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.*;
 import io.gsonfire.GsonFireBuilder;
@@ -58,23 +55,24 @@ public class Main {
 
         post("/saveUserData", (Request req, Response res) -> {
 
-            Customer newCustomer = new Customer(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
+            Customer newCustomer = new Customer(
+                    req.queryParams("name"),
+                    req.queryParams("email"),
+                    Integer.valueOf(req.queryParams("phone")),
+                    req.queryParams("billingAddress"),
+                    req.queryParams("shippingAddress"));
 
-            CustomerDaoWithJdbc customerDaoWithJdbc = CustomerDaoWithJdbc.getInstance();
-            customerDaoWithJdbc.add(newCustomer);
-            ShoppingCart shoppingCart = ShoppingCart.getInstance();
-            List<LineItem> shoppingCartContent = shoppingCart.getCartItems();
-            OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order newOrder = new Order(shoppingCartContent);
-            orderDataStore.add(newOrder);
-            ShoppingCart.setInstanceToNull(null);
-            ShoppingCart shoppingCart1 = ShoppingCart.getInstance();
-            res.redirect("/payment");
+            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
+            customerDataStore.add(newCustomer);
+            int customerId = customerDataStore.findByPhoneNumber(newCustomer.getPhoneNumber());
+
+            res.redirect("/payment/" + customerId);
             return "Ok";
         });
 
 
         get("/payment/:id", (Request req, Response res) -> {
+            CustomerDaoWithJdbc customerDataStore = CustomerDaoWithJdbc.getInstance();
             String param = req.params("id");
             int customerId = Integer.valueOf(param);
             Customer customer = customerDataStore.find(customerId);
@@ -105,7 +103,11 @@ public class Main {
             return true;
         });
 
-        get("/save-order/:id", (Request req, Response res) -> {
+        post("/save-order", (Request req, Response res) -> {
+            System.out.println("ittvagyunk");
+            System.out.println(req.params("id"));
+/*            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
+            OrderDao orderDataStore = OrderDaoWithJdbc.getInstance();
             String param = req.params("id");
             int customerId = Integer.valueOf(param);
             Customer customer = customerDataStore.find(customerId);
@@ -115,7 +117,7 @@ public class Main {
             List<LineItem> orderedItems = order.getOrderedItems().getShoppingCartContent();
             for (LineItem orderedItem : orderedItems) {
                 orderedItemsDataStore.add(orderId, orderedItem);
-            }
+            }*/
 
             return true;
         });
