@@ -57,7 +57,7 @@ public class Main {
         });
 
         post("/saveUserData", (Request req, Response res) -> {
-            User newUser = User.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"),
+            Customer newUser = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"),
                     req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
             Customer newCustomer = Customer.createUser(req.queryParams("name"), req.queryParams("email"), req.queryParams("phone"), req.queryParams("billingAddress"), req.queryParams("shippingAddress"));
             CustomerDaoWithJdbc customerDaoWithJdbc = CustomerDaoWithJdbc.getInstance();
@@ -73,8 +73,10 @@ public class Main {
             return "Ok";
         });
 
-        get("/payment", (Request req, Response res) -> {
-            System.out.println("/payment root");
+        get("/payment/:id", (Request req, Response res) -> {
+            String param = req.params("id");
+            int customerId = Integer.valueOf(param);
+            Customer customer = customerDataStore.find(customerId);
             return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
 
@@ -98,6 +100,21 @@ public class Main {
             String param = req.params("id");
             int itemId = Integer.valueOf(param);
             ShoppingCart.getInstance().deleteProductById(itemId);
+            return true;
+        });
+
+        get("/save-order/:id", (Request req, Response res) -> {
+            String param = req.params("id");
+            int customerId = Integer.valueOf(param);
+            Customer customer = customerDataStore.find(customerId);
+            Order order = new Order(customer);
+            orderDataStore.add(order);
+            int orderId = order.getId();
+            List<LineItem> orderedItems = order.getOrderedItems().getShoppingCartContent();
+            for (LineItem orderedItem : orderedItems) {
+                orderedItemsDataStore.add(orderId, orderedItem);
+            }
+
             return true;
         });
 
