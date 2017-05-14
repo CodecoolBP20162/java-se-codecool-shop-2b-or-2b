@@ -69,7 +69,32 @@ $(document).ready(function () {
         payment(name, email, phone, billingAddress, shippingAddress);
     });
 
+
+    $(".add-to-cart").click(function (event) {
+        event.preventDefault();
+        addToCart(this);
+    });
 });
+
+function addToCart(obj) {
+    var href = obj.getAttribute("href");
+    $.ajax({
+        type: "PUT",
+        url: href,
+        success: function(data) {
+            cartItems = JSON.parse(data);
+            for (var i = 0; i < cartItems.length; i++) {
+                renderItemData(cartItems[i]);
+            }
+            if (cartItems.length > 0) {
+                showTotalPrice(cartItems);
+            } else {
+                showEmptyCartMessage();
+            }
+            cartCounter();
+        }
+    });
+}
 
 function obtainCustomerIdFromHref() {
     var href_split = window.location.href.split('/');

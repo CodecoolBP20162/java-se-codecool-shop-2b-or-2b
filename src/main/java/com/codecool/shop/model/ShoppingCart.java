@@ -1,6 +1,5 @@
 package com.codecool.shop.model;
 
-import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class ShoppingCart {
 
     ;
 
-    public void handleAddToCart(int id) {
+    public void addToCart(int id) {
         Product foundItem = findProductById(id);
         if (foundItem == null) {
             Product prod = ProductDaoWithJdbc.getInstance().find(id);
