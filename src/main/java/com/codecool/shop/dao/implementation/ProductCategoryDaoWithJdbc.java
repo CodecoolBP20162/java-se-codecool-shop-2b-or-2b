@@ -59,6 +59,8 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
                 logger.error("SQL exception: {}", e);
                 e.printStackTrace();
             }
+        } else {
+            logger.info("The ProductCategory is already in the table.");
         }
     }
 
@@ -91,7 +93,8 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     @Override
     public ProductCategory find(String name) {
-        logger.info("Find product category with name: {} ...", name);
+        logger.info("Find products by category name...");
+        logger.debug("Find products with category: {} ...", name);
 
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE name ='" + name + "';";
@@ -112,7 +115,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
-        logger.info("Product category(ies) found!");
+
         return category;
 
     }
@@ -125,6 +128,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            logger.debug("Product category with id:{} was successfully deleted!", id);
             logger.info("Product category was successfully deleted!");
         } catch (SQLException e) {
             logger.error("SQL exception: {}", e);

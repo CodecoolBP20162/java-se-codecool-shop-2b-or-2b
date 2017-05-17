@@ -60,6 +60,8 @@ public class SupplierDaoWithJdbc implements SupplierDao {
                 logger.error("SQL exception: {}", e);
                 e.printStackTrace();
             }
+        } else {
+            logger.info("The Supplier is already in the table.");
         }
     }
 

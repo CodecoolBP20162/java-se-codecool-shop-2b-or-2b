@@ -61,12 +61,16 @@ public class ProductDaoWithJdbc implements ProductDao {
                 logger.error("SQL exception: {}", e);
                 e.printStackTrace();
             }
+        }else {
+            logger.info("The Product is already in the table.");
         }
+
     }
 
     @Override
     public Product find(int id) {
-        logger.info("Find product with id:{} ...", id);
+        logger.info("Find product by id...");
+        logger.debug("Find product with id:{}", id);
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
                 "FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id " +
                 "LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.id ='" + id + "';";
@@ -95,12 +99,13 @@ public class ProductDaoWithJdbc implements ProductDao {
             logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
-        logger.info("Product found!");
+        logger.debug("The product's name is {}", product.getName());
         return product;
     }
 
     public Product find(String name) {
-        logger.info("Find product with name: {} ...", name);
+        logger.info("Find product by name...");
+        logger.debug("Find product with name: {}", name);
 
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
                 "FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id " +
@@ -128,7 +133,6 @@ public class ProductDaoWithJdbc implements ProductDao {
             logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
-        logger.info("Product(s) found!");
         return product;
     }
 
