@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface OrderedItemsDao {
     void add(int id, LineItem lineItem);
+
     void clearAll();
+
     List<OrderedItems> getByOrderId(int id);
 }

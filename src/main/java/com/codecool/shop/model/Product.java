@@ -25,24 +25,16 @@ public class Product extends BaseModel {
         return defaultPrice;
     }
 
-    public void setDefaultPrice(int defaultPrice) {
-        this.defaultPrice = defaultPrice;
-    }
-
     public Currency getDefaultCurrency() {
         return defaultCurrency;
     }
 
-    public void setDefaultCurrency(Currency defaultCurrency) {
-        this.defaultCurrency = defaultCurrency;
-    }
-
-    public String getPrice() {
-        return String.valueOf(this.defaultPrice) + " " + this.defaultCurrency.toString();
-    }
-
     public int getId() {
         return id;
+    }
+
+    public int getPrice() {
+        return defaultPrice;
     }
 
     public void setPrice(int price, String currency) {

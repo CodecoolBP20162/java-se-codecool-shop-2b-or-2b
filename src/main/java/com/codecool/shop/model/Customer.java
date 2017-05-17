@@ -34,10 +34,6 @@ public class Customer extends Person {
         return shippingAddress;
     }
 
-    public void setOrders(Order order) {
-        orders.add(order);
-    }
-
     @Override
     public String toString() {
         return "Customer{" +

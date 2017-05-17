@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by joker on 2017.05.10..
  */
-public class OrderDaoWithJdbc implements OrderDao{
+public class OrderDaoWithJdbc implements OrderDao {
 
     private static OrderDaoWithJdbc instance = null;
 
@@ -33,14 +33,14 @@ public class OrderDaoWithJdbc implements OrderDao{
     }
 
     @Override
-    public void add(Order order){
+    public void add(Order order) {
         Customer customer = order.getCustomer();
         CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
         int customerId = customerDataStore.findByPhoneNumber(customer.getPhoneNumber());
 
         String query = "INSERT INTO orders (customer_id, total_price)" +
                 "VALUES ('" + customerId + "','"
-                + order.calculateTotalPrice()+"');";
+                + order.calculateTotalPrice() + "');";
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
@@ -75,14 +75,14 @@ public class OrderDaoWithJdbc implements OrderDao{
     public Order find(int id) {
         String query = "SELECT * FROM orders LEFT JOIN customers ON orders.customer_id=customer.id WHERE orders.customer_id ='" + id + "';";
         Order order = null;
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
+        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
             if (result.next()) {
 
                 Customer customer = new Customer(
                         result.getString("name"),
                         result.getString("email"),
-                Integer.valueOf(result.getString("phone_number")),
+                        Integer.valueOf(result.getString("phone_number")),
                         result.getString("billing_address"),
                         result.getString("shipping_address"));
                 order = new Order(customer);

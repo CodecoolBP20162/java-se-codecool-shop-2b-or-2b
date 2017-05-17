@@ -1,14 +1,17 @@
-import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.*;
-import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.dao.CustomerDao;
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.CustomerDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
+import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.*;
 import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
-
-import java.util.List;
 
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
@@ -17,10 +20,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //create postgres DB
-        DBController dbController = new DBController();
-        //test if db works
-        //dbController.add();
 
         // default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -140,7 +139,6 @@ public class Main {
                     .create().toJson(ShoppingCart.getInstance().countItemsInTheCart());
         });
 
-        //Add this line to your project to enable the debug screen
         enableDebugScreen();
     }
 

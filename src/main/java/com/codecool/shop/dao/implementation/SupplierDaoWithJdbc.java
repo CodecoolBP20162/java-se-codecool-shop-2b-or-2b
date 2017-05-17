@@ -4,11 +4,12 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.Supplier;
-import org.apache.commons.lang3.ObjectUtils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kata on 2017.05.09..

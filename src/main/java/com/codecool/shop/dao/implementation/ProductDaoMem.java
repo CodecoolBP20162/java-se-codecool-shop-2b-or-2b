@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 public class ProductDaoMem implements ProductDao {
 
-    private List<Product> DATA = new ArrayList<>();
     private static ProductDaoMem instance = null;
+    private List<Product> DATA = new ArrayList<>();
 
     /* A private Constructor prevents any other class from instantiating.
      */
@@ -54,7 +54,7 @@ public class ProductDaoMem implements ProductDao {
     }
 
     @Override
-    public void clearAll(){
+    public void clearAll() {
         DATA.clear();
     }
 

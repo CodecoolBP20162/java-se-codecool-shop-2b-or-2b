@@ -32,8 +32,8 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
     @Override
     public void add(int id, LineItem orderedItem) {
 
-        String query = "INSERT INTO ordered_items (order_id, product_id, quantity)"  +
-                "VALUES ('" + id + "','" + orderedItem.getProduct().getId() + "','" + orderedItem.getQuantity()+"');";
+        String query = "INSERT INTO ordered_items (order_id, product_id, quantity)" +
+                "VALUES ('" + id + "','" + orderedItem.getProduct().getId() + "','" + orderedItem.getQuantity() + "');";
 
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
@@ -42,7 +42,6 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
         }
 
     }
-
 
 
     @Override

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by joker on 2017.05.11..
  */
-public class OrderedItems{
+public class OrderedItems {
     private List<LineItem> shoppingCartContent = new ArrayList<>();
 
     public OrderedItems() {

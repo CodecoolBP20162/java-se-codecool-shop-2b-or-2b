@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class OrderDaoMem implements OrderDao {
 
-    private List<Order> DATA = new ArrayList<>();
     private static OrderDaoMem instance = null;
+    private List<Order> DATA = new ArrayList<>();
 
     private OrderDaoMem() {
 
@@ -43,7 +43,7 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
-    public List<Order> getShoppingCartContent(){
+    public List<Order> getShoppingCartContent() {
         return DATA;
     }
 

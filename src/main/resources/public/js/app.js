@@ -48,7 +48,7 @@ $(document).ready(function () {
     });
 
 
-    $(".submit_payment").click(function(event){
+    $(".submit_payment").click(function (event) {
         event.preventDefault();
         var id = obtainCustomerIdFromHref();
         var url = "/save-order";
@@ -73,7 +73,7 @@ $(document).ready(function () {
 
 function obtainCustomerIdFromHref() {
     var href_split = window.location.href.split('/');
-    var id = board_split[board_split.length - 1];
+    var id = href_split[href_split.length - 1];
     return id;
 }
 
@@ -133,9 +133,9 @@ function changeItemQuantity(itemId, newQuantity, cartItems) {
     cartCounter();
 }
 
-function deleteItemFromCartItems(itemId, cartItems){
-    for (var i=0; i<cartItems.length; i++){
-        if (itemId == cartItems[i].product.id){
+function deleteItemFromCartItems(itemId, cartItems) {
+    for (var i = 0; i < cartItems.length; i++) {
+        if (itemId == cartItems[i].product.id) {
             cartItems.pop(cartItems[i]);
         }
     }

@@ -1,6 +1,5 @@
 package com.codecool.shop.model;
 
-import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 
 import java.util.ArrayList;
@@ -25,9 +24,6 @@ public class ShoppingCart {
 
     }
 
-    public static void setInstanceToNull(ShoppingCart shoppingCart) {
-        instance = null;
-    }
 
     public List<LineItem> getCartItems() {
         return cartItems;

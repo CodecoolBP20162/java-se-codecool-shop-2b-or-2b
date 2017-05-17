@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <meta name="author" content="Codecool" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="author" content="Codecool"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <title>Payment</title>
 
@@ -13,129 +13,142 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" type="text/css" href="/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/css/custom.css"/>
 </head>
 
 <body>
-    <div class="jumbotron text-center">
-        <h1>Payment</h1>
+<div class="jumbotron text-center">
+    <h1>Payment</h1>
+</div>
+
+<div class="container">
+    <div>
     </div>
 
-    <div class="container">
-        <div>
+    <table class="table">
+        <thead>
+        <tr>
+            <td><h3>Choose payment method</h3></td>
+        </tr>
+        </thead>
+        <tbody>
+        <div class="item col-xs-4 col-lg-4">
+            <tr>
+                <th><img id="creditcard" src="img/mastercard.png" th:attr="src='/img/mastercard.png'"
+                         alt="credit card button"
+                         width="300"/></th>
+                <th><img src="img/paypal.png" th:attr="src='/img/paypal.png'" alt="pay pal" width="300"/></th>
+            </tr>
+            <tr>
+                <th>
+                    <button id="creditcard-modal" type="button" class="btn btn-default" data-dismiss="modal"
+                            data-toggle="modal" data-target="#creditcardModal">Pay by card
+                    </button>
+                </th>
+                <th>
+                    <button id="paypal-modal" type="button" class="btn btn-default" data-dismiss="modal"
+                            data-toggle="modal" data-target="#paypalModal">Pay via pay pal
+                    </button>
+                </th>
+            </tr>
         </div>
-
-        <table class="table">
-            <thead>
-            <tr><td><h3>Choose payment method</h3></td></tr>
-            </thead>
-            <tbody>
-            <div class="item col-xs-4 col-lg-4">
-                <tr>
-                    <th><img id="creditcard" src="img/mastercard.png" th:attr="src='/img/mastercard.png'" alt="credit card button"
-                             width="300"/></th>
-                    <th><img src="img/paypal.png" th:attr="src='/img/paypal.png'" alt="pay pal" width="300"/></th>
-                </tr>
-                <tr>
-                    <th><button id="creditcard-modal" type="button" class="btn btn-default" data-dismiss="modal"
-                                data-toggle="modal" data-target="#creditcardModal">Pay by card</button></th>
-                    <th><button id="paypal-modal" type="button" class="btn btn-default" data-dismiss="modal"
-                                data-toggle="modal" data-target="#paypalModal">Pay via pay pal</button></th>
-                </tr>
-            </div>
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
+</div>
 
 
-    <div class="container">
-        <div class="modal fade" id="creditcardModal" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 id="modal-title" class="modal-title">Credit card details</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form> <!-- id="userData" action="/saveUserData" method="post" -->
-                            <div class="form-group">
-                                <label for="cardnum">Card number</label>
-                                <input required="true" id="cardnum" type="number" min="1000000000000000" max="9999999999999999"
-                                       placeholder="Card number" class="form-control sh1" style="width: 200px"
-                                       name="cardnum"/>
-                            </div>
+<div class="container">
+    <div class="modal fade" id="creditcardModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="modal-title" class="modal-title">Credit card details</h4>
+                </div>
+                <div class="modal-body">
+                    <form> <!-- id="userData" action="/saveUserData" method="post" -->
+                        <div class="form-group">
+                            <label for="cardnum">Card number</label>
+                            <input required="true" id="cardnum" type="number" min="1000000000000000"
+                                   max="9999999999999999"
+                                   placeholder="Card number" class="form-control sh1" style="width: 200px"
+                                   name="cardnum"/>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="owner">Card holder's name</label>
-                                <input required="true" id="owner" type="text" placeholder="Name"
-                                       class="form-control sh1" style="width: 200px" name="owner"/>
-                            </div>
+                        <div class="form-group">
+                            <label for="owner">Card holder's name</label>
+                            <input required="true" id="owner" type="text" placeholder="Name"
+                                   class="form-control sh1" style="width: 200px" name="owner"/>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="code">Card security code</label>
-                                <input required="true" id="code" type="number" min="100" max="9999" placeholder="Card security code"
-                                       class="form-control sh1" style="width: 200px" name="code"/>
-                            </div>
+                        <div class="form-group">
+                            <label for="code">Card security code</label>
+                            <input required="true" id="code" type="number" min="100" max="9999"
+                                   placeholder="Card security code"
+                                   class="form-control sh1" style="width: 200px" name="code"/>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="expiry">Expires on</label>
-                                <input required="true" id="expiry" type="date" placeholder="Expiry date" class="form-control sh1"
-                                       style="width: 200px" name="expiry"/>
-                            </div>
+                        <div class="form-group">
+                            <label for="expiry">Expires on</label>
+                            <input required="true" id="expiry" type="date" placeholder="Expiry date"
+                                   class="form-control sh1"
+                                   style="width: 200px" name="expiry"/>
+                        </div>
 
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-default submit_payment">Finish payment</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default submit_payment">Finish payment</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <div class="modal fade" id="paypalModal" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 id="paypal-title" class="modal-title">Credit card details</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form> <!-- id="userData" action="/saveUserData" method="post" -->
-                            <div class="form-group">
-                                <label for="username">Username</label>
-                                <input required="true" id="username" type="text" placeholder="Username"
-                                       class="form-control sh1" style="width: 200px" name="username"/>
-                            </div>
+<div class="container">
+    <div class="modal fade" id="paypalModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="paypal-title" class="modal-title">Credit card details</h4>
+                </div>
+                <div class="modal-body">
+                    <form> <!-- id="userData" action="/saveUserData" method="post" -->
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input required="true" id="username" type="text" placeholder="Username"
+                                   class="form-control sh1" style="width: 200px" name="username"/>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="pass">Password</label>
-                                <input required="true" id="pass" type="number" min="100" max="9999" placeholder="Card security code"
-                                       class="form-control sh1" style="width: 200px" name="pass"/>
-                            </div>
+                        <div class="form-group">
+                            <label for="pass">Password</label>
+                            <input required="true" id="pass" type="number" min="100" max="9999"
+                                   placeholder="Card security code"
+                                   class="form-control sh1" style="width: 200px" name="pass"/>
+                        </div>
 
-                            <div class="modal-footer">
-                                <!--<button type="submit" class="btn btn-default">Cancel</button>-->
-                                <button type="submit" class="btn btn-default submit_payment">Finish payment</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="modal-footer">
+                            <!--<button type="submit" class="btn btn-default">Cancel</button>-->
+                            <button type="submit" class="btn btn-default submit_payment">Finish payment</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>

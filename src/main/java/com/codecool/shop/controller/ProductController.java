@@ -3,7 +3,9 @@ package com.codecool.shop.controller;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
+import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 import spark.ModelAndView;
@@ -67,14 +69,4 @@ public class ProductController {
 
         return new ModelAndView(params, "product/index");
     }
-
-//    public ModelAndView (Request req, Response res) {
-//        String supplierName = req.params(":name");
-//        Supplier chosenSupplier = supplierDataStore.find(supplierName);
-//
-//        Map<String, Object> params = createDefaultMap();
-//        params.put("products", productDataStore.getBy(chosenSupplier));
-//
-//        return new ModelAndView(params, "product/index");
-//    }
 }
