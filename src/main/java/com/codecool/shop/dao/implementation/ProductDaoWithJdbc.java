@@ -5,6 +5,8 @@ import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public class ProductDaoWithJdbc implements ProductDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductDaoWithJdbc.class);
     private static ProductDaoWithJdbc instance = null;
 
     /* A private Constructor prevents any other class from instantiating.
@@ -32,6 +35,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public void add(Product product) {
+        logger.info("Add new product to products table...");
         int id;
         List<Product> existingProducts = getAll();
         if (find(product.getName()) == null) {
@@ -52,7 +56,9 @@ public class ProductDaoWithJdbc implements ProductDao {
             try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
                 statement.executeUpdate(query);
                 product.setId(id);
+                logger.info("Product is successfully added!");
             } catch (SQLException e) {
+                logger.error("SQL exception: {}", e);
                 e.printStackTrace();
             }
         }
@@ -60,6 +66,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     @Override
     public Product find(int id) {
+        logger.info("Find product with id:{} ...", id);
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
                 "FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id " +
                 "LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.id ='" + id + "';";
@@ -85,13 +92,16 @@ public class ProductDaoWithJdbc implements ProductDao {
             }
 
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
-
+        logger.info("Product found!");
         return product;
     }
 
     public Product find(String name) {
+        logger.info("Find product with name: {} ...", name);
+
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
                 "FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id " +
                 "LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.name ='" + name + "';";
@@ -115,19 +125,24 @@ public class ProductDaoWithJdbc implements ProductDao {
                 product.setId(result.getInt("id"));
             }
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
-
+        logger.info("Product(s) found!");
         return product;
     }
 
     @Override
     public void remove(int id) {
+        logger.info("Remove product with id:{}...!", id);
+
         String query = "DELETE FROM products WHERE id = '" + id + "';";
 
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            logger.info("Product was successfully deleted!");
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
     }
@@ -160,6 +175,7 @@ public class ProductDaoWithJdbc implements ProductDao {
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
     }
@@ -177,6 +193,7 @@ public class ProductDaoWithJdbc implements ProductDao {
             }
             return allProducts;
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
 

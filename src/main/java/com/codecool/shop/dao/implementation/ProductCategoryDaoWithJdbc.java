@@ -4,6 +4,8 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.List;
  * Created by kata on 2017.05.09..
  */
 public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryDaoWithJdbc.class);
 
     private static ProductCategoryDaoWithJdbc instance = null;
 
@@ -31,6 +35,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     @Override
     public void add(ProductCategory category) {
+        logger.info("Add new productcategory to product_categories table...");
         int id;
         List<ProductCategory> existingCategories = getAll();
 
@@ -49,7 +54,9 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
                  Statement statement = connection.createStatement()) {
                 statement.executeUpdate(query);
                 category.setId(id);
+                logger.info("Product category is successfully added!");
             } catch (SQLException e) {
+                logger.error("SQL exception: {}", e);
                 e.printStackTrace();
             }
         }
@@ -57,6 +64,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     @Override
     public ProductCategory find(int id) {
+        logger.info("Find product category with id:{} ...", id);
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE id ='" + id + "';";
 
@@ -74,13 +82,17 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             }
 
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
+        logger.info("Product category found!");
         return category;
     }
 
     @Override
     public ProductCategory find(String name) {
+        logger.info("Find product category with name: {} ...", name);
+
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE name ='" + name + "';";
 
@@ -97,20 +109,25 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
             }
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
-
+        logger.info("Product category(ies) found!");
         return category;
 
     }
 
     @Override
     public void remove(int id) {
+        logger.info("Remove product category with id:{}...!", id);
+
         String query = "DELETE FROM product_categories WHERE id='" + id + "';";
 
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            logger.info("Product category was successfully deleted!");
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
     }
@@ -135,6 +152,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             return allCategories;
 
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
 
@@ -148,6 +166,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
+            logger.error("SQL exception: {}", e);
             e.printStackTrace();
         }
     }
