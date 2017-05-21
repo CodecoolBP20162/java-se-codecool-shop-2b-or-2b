@@ -11,6 +11,14 @@ import java.util.List;
 
 /**
  * Created by kata on 2017.05.09..
+ * <h1>ProductCategoryDaoWithJdbc class!</h1>
+ * The ProductCategoryDaoWithJdbc class implements the ProductCategoryDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do some database action:
+ * add new productcategory to database,
+ * find a productcategory by an id
+ * find a productcategory by name
+ * remove productcategory from the database by id
  */
 public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
@@ -28,7 +36,12 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return instance;
     }
 
-
+    /**
+     * The add method saves the productcategory's data in the database
+     * Catch SQLException if DB connection is failed.
+     *
+     * @param category object
+     */
     @Override
     public void add(ProductCategory category) {
         int id;
@@ -55,6 +68,15 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         }
     }
 
+    /**
+     * The find method is searching in product_categories table and returns the productCategory with the given id.
+     * Creates a productCategory instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     * @return category
+     */
+
     @Override
     public ProductCategory find(int id) {
         ProductCategory category = null;
@@ -79,6 +101,14 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return category;
     }
 
+    /**
+     * The find method is searching in product_categories table and returns the productCategory with the given name.
+     * Creates a productCategory instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param name
+     * @return category
+     */
     @Override
     public ProductCategory find(String name) {
         ProductCategory category = null;
@@ -104,6 +134,12 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     }
 
+    /**
+     * The remove method is deleting entry from product_categories table by id.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     */
     @Override
     public void remove(int id) {
         String query = "DELETE FROM product_categories WHERE id='" + id + "';";
@@ -115,6 +151,11 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         }
     }
 
+    /**
+     * Creates a query to get all entries from product_categories table.
+     *
+     * @return List<ProductCategory>
+     */
     @Override
     public List<ProductCategory> getAll() {
         List<ProductCategory> allCategories = new ArrayList<>();
@@ -141,6 +182,10 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return null;
     }
 
+    /**
+     * Creates a query to delete all entries from product_categories table.
+     * Catch SQLException if DB connection or query fails.
+     */
     @Override
     public void clearAll() {
         String query = "DELETE FROM product_categories;";

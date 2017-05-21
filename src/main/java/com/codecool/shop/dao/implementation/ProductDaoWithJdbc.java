@@ -12,6 +12,14 @@ import java.util.List;
 
 /**
  * Created by kata on 2017.05.08..
+ * <h1>ProductDaoWithJdbc class!</h1>
+ * The ProductDaoWithJdbc class implements the ProductDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do some database action:
+ * add new product to database,
+ * find a product by an id
+ * find a product by name
+ * remove product from the database by id
  */
 public class ProductDaoWithJdbc implements ProductDao {
 
@@ -29,7 +37,12 @@ public class ProductDaoWithJdbc implements ProductDao {
         return instance;
     }
 
-
+    /**
+     * The add method saves the product data in the database
+     * Catch SQLException if DB connection is failed.
+     *
+     * @param product object
+     */
     @Override
     public void add(Product product) {
         int id;
@@ -57,6 +70,15 @@ public class ProductDaoWithJdbc implements ProductDao {
             }
         }
     }
+
+    /**
+     * The find method is searching in products table and returns the product with the given id.
+     * Creates a product instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     * @return product
+     */
 
     @Override
     public Product find(int id) {
@@ -91,6 +113,14 @@ public class ProductDaoWithJdbc implements ProductDao {
         return product;
     }
 
+    /**
+     * The find method is searching in products table and returns the product with the given name.
+     * Creates a product instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param name
+     * @return product
+     */
     public Product find(String name) {
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
                 "FROM products LEFT JOIN product_categories ON products.product_category=product_categories.id " +
@@ -121,6 +151,12 @@ public class ProductDaoWithJdbc implements ProductDao {
         return product;
     }
 
+    /**
+     * The remove method is deleting entry from products table by id.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     */
     @Override
     public void remove(int id) {
         String query = "DELETE FROM products WHERE id = '" + id + "';";
@@ -132,6 +168,11 @@ public class ProductDaoWithJdbc implements ProductDao {
         }
     }
 
+    /**
+     * Creates a query to get all entries from products table.
+     *
+     * @return List<Product>
+     */
     @Override
     public List<Product> getAll() {
         String query = "SELECT * FROM products;";
@@ -139,6 +180,12 @@ public class ProductDaoWithJdbc implements ProductDao {
         return queryExecuteHandler(query);
     }
 
+    /**
+     * Creates a query to get entries from products table filtered by the given supplier object.
+     *
+     * @param supplier
+     * @return List<Product>
+     */
     @Override
     public List<Product> getBy(Supplier supplier) {
         String query = "SELECT id FROM products WHERE supplier=" + supplier.getId() + ";";
@@ -146,6 +193,12 @@ public class ProductDaoWithJdbc implements ProductDao {
         return queryExecuteHandler(query);
     }
 
+    /**
+     * Creates a query to get entries from products table filtered by the given ProductCategory object.
+     *
+     * @param productCategory
+     * @return List<Product>
+     */
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
         String query = "SELECT id FROM products WHERE product_category=" + productCategory.getId() + ";";
@@ -153,6 +206,10 @@ public class ProductDaoWithJdbc implements ProductDao {
         return queryExecuteHandler(query);
     }
 
+    /**
+     * Creates a query to delete all entries from products table.
+     * Catch SQLException if DB connection or query fails.
+     */
     @Override
     public void clearAll() {
         String query = "DELETE FROM products;";
@@ -164,6 +221,13 @@ public class ProductDaoWithJdbc implements ProductDao {
         }
     }
 
+    /**
+     * It gets a query as parameter and it processes the result.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param query
+     * @return ArrayList<Product>
+     */
 
     private ArrayList<Product> queryExecuteHandler(String query) {
         ArrayList<Product> allProducts = new ArrayList<>();

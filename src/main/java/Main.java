@@ -1,20 +1,37 @@
 import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.*;
-import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.dao.CustomerDao;
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.CustomerDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
+import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.*;
 import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 
-import java.util.List;
-
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
+/**
+  * The main method of the Codecool Shop. It uses thymeleaf for templates and Spark as the web framework.
+  * It has two static methods: main and populateData.
+  *
+  * @author 2B || !2B
+  * @version 1.0
+ */
 public class Main {
 
+    /**
+          * Main method.
+          *<p> Creates database, server settings.
+          *<p> It calls populateData method for creating example data to the database.
+          *<p> Implements spark routes.
+          */
     public static void main(String[] args) {
 
         //create postgres DB
@@ -144,6 +161,9 @@ public class Main {
         enableDebugScreen();
     }
 
+    /**
+     * Method creates example data, add product categories and suppliers to the database.
+     */
     public static void populateData() {
 
         ProductDao productDataStore = ProductDaoWithJdbc.getInstance();
