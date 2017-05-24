@@ -1,14 +1,19 @@
 import com.codecool.shop.controller.DBController;
 import com.codecool.shop.controller.ProductController;
-import com.codecool.shop.dao.*;
-import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.dao.CustomerDao;
+import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.CustomerDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
+import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
+import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.*;
+import com.codecool.shop.transformer.JsonTransformer;
 import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
-
-import java.util.List;
 
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
@@ -19,8 +24,6 @@ public class Main {
 
         //create postgres DB
         DBController dbController = new DBController();
-        //test if db works
-        //dbController.add();
 
         // default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -48,12 +51,7 @@ public class Main {
             return new ThymeleafTemplateEngine().render(new ProductController().renderProductsByCategory(req, res));
         });
 
-        get("/addToCart/:id", (Request req, Response res) -> {
-            ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
-            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
-        });
-
-        post("/saveUserData", (Request req, Response res) -> {
+        post("/users", (Request req, Response res) -> {
 
             Customer newCustomer = new Customer(
                     req.queryParams("name"),
@@ -79,22 +77,22 @@ public class Main {
 
             return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
-
-        get("/cart", (Request req, Response res) -> {
-            return new GsonFireBuilder()
-                    .enableExposeMethodResult()
-                    .createGsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson(ShoppingCart.getInstance().getCartItems());
+/*
+        // this method originally was: get("/addToCart/:id" -> replaced to put("/cart/:id",
+        put("/cart/:id", (Request req, Response res) -> {
+            ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
         });
+*/
+        get("/cart", (Request req, Response res) ->
+                ShoppingCart.getInstance().getCartItems(), new JsonTransformer());
 
-        put("/cart", (Request req, Response res) -> {
-            return new GsonFireBuilder()
-                    .enableExposeMethodResult()
-                    .createGsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson(ShoppingCart.getInstance().getCartItems());
-        });
+        put("/cart/:id", (Request req, Response res) -> {
+            Integer itemID = Integer.parseInt(req.params("id"));
+            ShoppingCart cart = ShoppingCart.getInstance();
+            cart.addToCart(itemID);
+            return cart.getCartItems();
+        }, new JsonTransformer());
 
         get("/remove/:id", (Request req, Response res) -> {
             String param = req.params("id");
