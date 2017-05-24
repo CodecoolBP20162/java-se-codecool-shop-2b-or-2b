@@ -9,7 +9,10 @@ import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -28,20 +32,40 @@ class ProductDaoWithJdbcTest {
     SupplierDao supplierDataStore = SupplierDaoWithJdbc.getInstance();
     ProductCategoryDao productCategoryDataStore = ProductCategoryDaoWithJdbc.getInstance();
 
-    Supplier gyumolcsos;
-    Supplier zoldseges;
-    ProductCategory gyumolcs;
-    ProductCategory zoldseg;
     Product product1;
     Product product2;
     Product product3;
 
+    @Mock
+    Supplier mockGyumolcsos;
+    Supplier mockZoldseges;
+    ProductCategory mockGyumolcs;
+    ProductCategory mockZoldseg;
+
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        tearDown();
+
+        product1 = new Product("alma", 50, "USD",
+                "Tasty", mockGyumolcs, mockGyumolcsos);
+        productDataStore.add(product1);
+        product2 = new Product("korte", 479, "USD",
+                "Dont like it. Hurts teeths", mockGyumolcs, mockGyumolcsos);
+        productDataStore.add(product2);
+        product3 = new Product("repa", 89, "USD",
+                "Fav thing of bunnies.", mockZoldseg, mockZoldseges);
+        productDataStore.add(product3);
+
+    }
+
 
     @Test
     void add_addsNewProductToDatabase() {
-        setUp();
         Product product4 = new Product("brokkoli", 50, "USD",
-                "Healthy stuff", zoldseg, zoldseges);
+                "Healthy stuff", mockZoldseg, mockZoldseges);
         productDataStore.add(product4);
 
         assertNotNull(productDataStore.find("brokkoli"));
@@ -52,7 +76,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void find_findsProductBasedOnId() {
-        setUp();
         int productId = product1.getId();
         Product foundProduct = productDataStore.find(productId);
 
@@ -63,8 +86,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void find_searchesProductsByIdNotPresent_returnsNull() {
-        setUp();
-
         assertNull(productDataStore.find(100));
 
         tearDown();
@@ -73,7 +94,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void find_findsProductBasedOnName() {
-        setUp();
         String productName = product1.getName();
         Product foundProduct = productDataStore.find(productName);
 
@@ -84,8 +104,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void find_searchesProductsByNameNotPresent_returnsNull() {
-        setUp();
-
         assertNull(productDataStore.find("abraka"));
 
         tearDown();
@@ -94,7 +112,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void remove_removesProductFromDatabaseBasedOnId() {
-        setUp();
         productDataStore.remove(1);
 
         assertNull(productDataStore.find(1));
@@ -104,7 +121,6 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void getAll_() {
-        setUp();
         List<Product> allProducts = Arrays.asList(product1, product2, product3);
 
         assertEquals(allProducts.size(),
@@ -115,11 +131,10 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void getBy_findsProductsBySupplier() {
-        setUp();
         List<Product> allProductBySupplier = Arrays.asList(product1, product2);
 
         assertEquals(allProductBySupplier.toString(),
-                productDataStore.getBy(gyumolcsos).toString());
+                productDataStore.getBy(mockGyumolcsos).toString());
 
         tearDown();
 
@@ -127,41 +142,14 @@ class ProductDaoWithJdbcTest {
 
     @Test
     void getBy_findsProductsByProductCategory() {
-        setUp();
         List<Product> allProductByProductCategory = Arrays.asList(product3);
 
         assertEquals(allProductByProductCategory.toString(),
-                productDataStore.getBy(zoldseg).toString());
+                productDataStore.getBy(mockZoldseg).toString());
 
         tearDown();
     }
 
-    public void setUp() {
-
-        tearDown();
-        gyumolcsos = new Supplier("gyumolcsos", "Fruity guy");
-        supplierDataStore.add(gyumolcsos);
-        zoldseges = new Supplier("zoldseges", "Person with vegetables");
-        supplierDataStore.add(zoldseges);
-
-        gyumolcs = new ProductCategory("Gyumolcs", "Hardware",
-                "Colorful stuff.");
-        productCategoryDataStore.add(gyumolcs);
-        zoldseg = new ProductCategory("Zoldseg", "Hardware",
-                "Green stuff.");
-        productCategoryDataStore.add(zoldseg);
-
-        product1 = new Product("alma", 50, "USD",
-                "Tasty", gyumolcs, gyumolcsos);
-        productDataStore.add(product1);
-        product2 = new Product("korte", 479, "USD",
-                "Dont like it. Hurts teeths", gyumolcs, gyumolcsos);
-        productDataStore.add(product2);
-        product3 = new Product("repa", 89, "USD",
-                "Fav thing of bunnies.", zoldseg, zoldseges);
-        productDataStore.add(product3);
-
-    }
 
     void tearDown() {
         productDataStore.clearAll();
