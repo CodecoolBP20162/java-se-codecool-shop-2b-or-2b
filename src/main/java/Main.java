@@ -9,6 +9,7 @@ import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.*;
+import com.codecool.shop.transformer.JsonTransformer;
 import io.gsonfire.GsonFireBuilder;
 import spark.Request;
 import spark.Response;
@@ -23,8 +24,6 @@ public class Main {
 
         //create postgres DB
         DBController dbController = new DBController();
-        //test if db works
-        //dbController.add();
 
         // default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -79,31 +78,21 @@ public class Main {
             return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
 /*
+        // this method originally was: get("/addToCart/:id" -> replaced to put("/cart/:id",
         put("/cart/:id", (Request req, Response res) -> {
-            System.out.println(req.params("id"));
             ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
             return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
         });
 */
+        get("/cart", (Request req, Response res) ->
+                ShoppingCart.getInstance().getCartItems(), new JsonTransformer());
+
         put("/cart/:id", (Request req, Response res) -> {
             Integer itemID = Integer.parseInt(req.params("id"));
             ShoppingCart cart = ShoppingCart.getInstance();
             cart.addToCart(itemID);
-            return new GsonFireBuilder()
-                    .enableExposeMethodResult()
-                    .createGsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create()
-                    .toJson(cart.getCartItems());
-        });
-
-        get("/cart", (Request req, Response res) -> {
-            return new GsonFireBuilder()
-                    .enableExposeMethodResult()
-                    .createGsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create().toJson(ShoppingCart.getInstance().getCartItems());
-        });
+            return cart.getCartItems();
+        }, new JsonTransformer());
 
         get("/remove/:id", (Request req, Response res) -> {
             String param = req.params("id");
