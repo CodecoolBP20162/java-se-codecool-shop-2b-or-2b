@@ -9,6 +9,13 @@ import java.sql.*;
 
 /**
  * Created by joker on 2017.05.10..
+ * <h1>CustomerDaoWithJdbc class!</h1>
+ * The CustomerDaoWithJdbc class implements the CustomerDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do some database action:
+ * add new customer to database,
+ * find a customer by an id
+ * find a customer by phone number
  */
 public class CustomerDaoWithJdbc implements CustomerDao {
 
@@ -24,7 +31,13 @@ public class CustomerDaoWithJdbc implements CustomerDao {
         return instance;
     }
 
-
+    /**
+     * The add method saves the customer data (name, email, phone number, billing and shipping address)
+     * Catch SQLException if DB connection is failed.
+     * PreparedStatement class is help to prevent SQL injection.
+     *
+     * @param customer object
+    */
     @Override
     public void add(Customer customer) {
 
@@ -44,7 +57,14 @@ public class CustomerDaoWithJdbc implements CustomerDao {
         }
     }
 
-
+    /**
+     * The find method is searching in customers table and returns the customer with the given id.
+     * Creates a customer instance with the acquired data and return it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     * @return customer
+     */
     @Override
     public Customer find(int id) {
         //Returns the customer with the given id in the db
@@ -68,6 +88,14 @@ public class CustomerDaoWithJdbc implements CustomerDao {
         return customer;
     }
 
+
+    /**
+     * The findByPhoneNumber method is searching in customers table and returns the customer's id with the given phoneNumber.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param phoneNumber
+     * @return id
+     */
     @Override
     public int findByPhoneNumber(int phoneNumber) {
         //Returns the customer with the given id in the db

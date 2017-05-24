@@ -4,14 +4,23 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.Supplier;
-import org.apache.commons.lang3.ObjectUtils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kata on 2017.05.09..
+ * <h1>SupplierDaoWithJdbc class!</h1>
+ * The SupplierDaoWithJdbc class implements the SupplierDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do some database action:
+ * add new supplier to database,
+ * find a supplier by an id
+ * find a supplier by name
+ * remove supplier from the database by id
  */
 public class SupplierDaoWithJdbc implements SupplierDao {
 
@@ -30,7 +39,12 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         return instance;
     }
 
-
+    /**
+     * The add method saves the supplier's data in the database
+     * Catch SQLException if DB connection is failed.
+     *
+     * @param supplier object
+     */
     @Override
     public void add(Supplier supplier) {
         int id;
@@ -57,6 +71,14 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         }
     }
 
+    /**
+     * The find method is searching in suppliers table and returns the supplier with the given id.
+     * Creates a supplier instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     * @return supplier
+     */
     @Override
     public Supplier find(int id) {
         //Returns the supplier with the given id in the db
@@ -80,6 +102,14 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         return supplier;
     }
 
+    /**
+     * The find method is searching in suppliers table and returns the supplier with the given name.
+     * Creates a supplier instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param name
+     * @return supplier
+     */
     @Override
     public Supplier find(String name) {
         //Returns the supplier with the given name in the db
@@ -103,6 +133,12 @@ public class SupplierDaoWithJdbc implements SupplierDao {
 
     }
 
+    /**
+     * The remove method is deleting entry from suppliers  table by id.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id
+     */
     @Override
     public void remove(int id) {
         String query = "DELETE FROM suppliers WHERE id='" + id + "';";
@@ -115,6 +151,10 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         }
     }
 
+    /**
+     * Creates a query to delete all entries from suppliers table.
+     * Catch SQLException if DB connection or query fails.
+     */
     @Override
     public void clearAll() {
         String query = "DELETE FROM suppliers;";
@@ -127,7 +167,11 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         }
     }
 
-
+    /**
+     * Creates a query to get all entries from suppliers table.
+     *
+     * @return ArrayList<Supplier>
+     */
     @Override
     public ArrayList<Supplier> getAll() {
         ArrayList<Supplier> suppliers = new ArrayList();

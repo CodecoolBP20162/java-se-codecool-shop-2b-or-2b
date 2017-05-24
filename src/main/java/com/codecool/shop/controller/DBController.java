@@ -4,7 +4,9 @@ import java.sql.*;
 
 /**
  * Created by eb on 2017.05.08..
+ * This class creates the Database connection
  */
+
 public class DBController {
 
     private static final String DATABASE = "jdbc:postgresql://localhost:5432/codecoolshop";
