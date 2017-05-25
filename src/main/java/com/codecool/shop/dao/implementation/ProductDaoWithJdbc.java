@@ -5,8 +5,13 @@ import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +28,7 @@ import java.util.List;
  */
 public class ProductDaoWithJdbc implements ProductDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductDaoWithJdbc.class);
     private static ProductDaoWithJdbc instance = null;
 
     /** A protected Constructor prevents any other class from instantiating.
@@ -32,6 +38,7 @@ public class ProductDaoWithJdbc implements ProductDao {
 
     public static ProductDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", ProductDaoWithJdbc.class.getSimpleName());
             instance = new ProductDaoWithJdbc();
         }
         return instance;
@@ -106,6 +113,7 @@ public class ProductDaoWithJdbc implements ProductDao {
             }
 
         } catch (SQLException e) {
+            logger.warn("Product not found in DB");
             e.printStackTrace();
         }
 
@@ -142,8 +150,10 @@ public class ProductDaoWithJdbc implements ProductDao {
                         result.getString("description"),
                         category, supplier);
                 product.setId(result.getInt("id"));
+                logger.info("{} - Product found in DB", product.getName());
             }
         } catch (SQLException e) {
+            logger.warn("Product not found in DB");
             e.printStackTrace();
         }
 
@@ -170,7 +180,7 @@ public class ProductDaoWithJdbc implements ProductDao {
     /**
      * The getAll method runs a query to get all entries from products table.
      *
-     * @return List<Product> A list of Products from the products table.
+     * @return A list of Products from the products table.
      */
     @Override
     public List<Product> getAll() {
@@ -183,7 +193,7 @@ public class ProductDaoWithJdbc implements ProductDao {
      * The getBy method runs a query to get entries from products table filtered by the given Supplier object.
      *
      * @param supplier A Supplier object to filter by.
-     * @return List<Product> A list of Product objects, filtered by a Supplier.
+     * @return A list of Product objects, filtered by a Supplier.
      *
      */
     @Override
@@ -197,7 +207,7 @@ public class ProductDaoWithJdbc implements ProductDao {
      * This getBy method runs a query to get entries from products table filtered by the given ProductCategory object.
      *
      * @param productCategory A ProductCategory object to filter by.
-     * @return List<Product> A list of Product objects, filtered by a ProductCategory.
+     * @return A list of Product objects, filtered by a ProductCategory.
      */
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
@@ -228,7 +238,7 @@ public class ProductDaoWithJdbc implements ProductDao {
      * A list of Product objects, filtered by a Supplier.
      *
      * @param query A String object contains an SQL query.
-     * @return ArrayList<Product> An ArrayList of Product objects, based on the query content.
+     * @return An ArrayList of Product objects, based on the query content.
      */
 
     private ArrayList<Product> queryExecuteHandler(String query) {

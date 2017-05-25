@@ -5,6 +5,8 @@ import com.codecool.shop.dao.CustomerDao;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.model.Customer;
 import com.codecool.shop.model.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -26,6 +28,7 @@ import java.util.List;
  */
 public class OrderDaoWithJdbc implements OrderDao{
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderDaoWithJdbc.class);
     private static OrderDaoWithJdbc instance = null;
 
     /**
@@ -40,6 +43,7 @@ public class OrderDaoWithJdbc implements OrderDao{
      */
     public static OrderDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", OrderDaoWithJdbc.class.getSimpleName());
             instance = new OrderDaoWithJdbc();
         }
         return instance;

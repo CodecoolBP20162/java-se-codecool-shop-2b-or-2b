@@ -57,7 +57,7 @@ public interface ProductDao {
     /**
      * The getAll method runs a query to get all entries from products table.
      *
-     * @return List<Product> A list of Products from the products table.
+     * @return A list of Products from the products table.
      */
     List<Product> getAll();
 
@@ -65,7 +65,7 @@ public interface ProductDao {
      * The getBy method runs a query to get entries from products table filtered by the given Supplier object.
      *
      * @param supplier A Supplier object to filter by.
-     * @return List<Product> A list of Product objects, filtered by a Supplier.
+     * @return A list of Product objects, filtered by a Supplier.
      *
      */
     List<Product> getBy(Supplier supplier);
@@ -74,7 +74,7 @@ public interface ProductDao {
      * This getBy method runs a query to get entries from products table filtered by the given ProductCategory object.
      *
      * @param productCategory A ProductCategory object to filter by.
-     * @return List<Product> A list of Product objects, filtered by a ProductCategory.
+     * @return A list of Product objects, filtered by a ProductCategory.
      */
     List<Product> getBy(ProductCategory productCategory);
 

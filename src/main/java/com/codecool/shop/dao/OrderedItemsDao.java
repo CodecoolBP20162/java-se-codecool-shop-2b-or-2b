@@ -19,6 +19,7 @@ public interface OrderedItemsDao {
      * The add method saves the orderedItem data (order ID, product ID, quantity) to database.
      * Catch SQLException if DB connection is failed.
      *
+     * @param id The ID of the order
      * @param orderedItem The orderedItem instance to save data to database.
      */
     void add(int id, LineItem orderedItem);

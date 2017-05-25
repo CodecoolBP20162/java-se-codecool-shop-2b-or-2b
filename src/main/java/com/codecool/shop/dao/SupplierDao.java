@@ -54,7 +54,7 @@ public interface SupplierDao {
     /**
      * The getAll method runs a query to get all entries from suppliers table.
      *
-     * @return ArrayList<Supplier> A list of Supplier objects from the suppliers table.
+     * @return A list of Supplier objects from the suppliers table.
      */
     List<Supplier> getAll();
 

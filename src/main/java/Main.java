@@ -9,8 +9,9 @@ import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.*;
-import com.codecool.shop.transformer.JsonTransformer;
 import io.gsonfire.GsonFireBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -27,6 +28,8 @@ import static spark.debug.DebugScreen.enableDebugScreen;
   * @version 1.0
  */
 public class Main {
+
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     /**
           * Main method.
@@ -58,15 +61,23 @@ public class Main {
         });
 
         get("/supplier/:name", (Request req, Response res) -> {
+            logger.info("Filtering products by supplier: {}", req.params(":name"));
             return new ThymeleafTemplateEngine().render(new ProductController().renderProductsBySupplier(req, res));
         });
 
         get("/category/:name", (Request req, Response res) -> {
+            logger.info("Filtering products by category: {}", req.params(":name"));
             return new ThymeleafTemplateEngine().render(new ProductController().renderProductsByCategory(req, res));
         });
 
-        post("/users", (Request req, Response res) -> {
+        get("/addToCart/:id", (Request req, Response res) -> {
+            logger.info("Adding item to shoppingcart");
+            logger.debug("Adding item to cart with id: {}", req.params(":id"));
+            ShoppingCart.getInstance().addToCart(Integer.parseInt(req.params("id")));
+            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
+        });
 
+        post("/saveUserData", (Request req, Response res) -> {
             Customer newCustomer = new Customer(
                     req.queryParams("name"),
                     req.queryParams("email"),
@@ -77,38 +88,38 @@ public class Main {
             CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
             customerDataStore.add(newCustomer);
             int customerId = customerDataStore.findByPhoneNumber(newCustomer.getPhoneNumber());
-
             res.redirect("/payment/" + customerId);
             return "Ok";
         });
 
-
         get("/payment/:id", (Request req, Response res) -> {
+            logger.info("Initializing payment");
             CustomerDaoWithJdbc customerDataStore = CustomerDaoWithJdbc.getInstance();
             String param = req.params("id");
             int customerId = Integer.valueOf(param);
             Customer customer = customerDataStore.find(customerId);
-
+            logger.debug("Finished initializing payment");
             return new ThymeleafTemplateEngine().render(new ProductController().renderPayment(req, res));
         });
-/*
-        // this method originally was: get("/addToCart/:id" -> replaced to put("/cart/:id",
-        put("/cart/:id", (Request req, Response res) -> {
-            ShoppingCart.getInstance().handleAddToCart(Integer.parseInt(req.params("id")));
-            return new ThymeleafTemplateEngine().render(new ProductController().renderProducts(req, res));
-        });
-*/
-        get("/cart", (Request req, Response res) ->
-                ShoppingCart.getInstance().getCartItems(), new JsonTransformer());
 
-        put("/cart/:id", (Request req, Response res) -> {
-            Integer itemID = Integer.parseInt(req.params("id"));
-            ShoppingCart cart = ShoppingCart.getInstance();
-            cart.addToCart(itemID);
-            return cart.getCartItems();
-        }, new JsonTransformer());
+        get("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson(ShoppingCart.getInstance().getCartItems());
+        });
+
+        put("/cart", (Request req, Response res) -> {
+            return new GsonFireBuilder()
+                    .enableExposeMethodResult()
+                    .createGsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create().toJson(ShoppingCart.getInstance().getCartItems());
+        });
 
         get("/remove/:id", (Request req, Response res) -> {
+            logger.info("Deleting item from shopping cart");
             String param = req.params("id");
             int itemId = Integer.valueOf(param);
             ShoppingCart.getInstance().deleteProductById(itemId);
@@ -116,30 +127,16 @@ public class Main {
         });
 
         post("/save-order", (Request req, Response res) -> {
-            System.out.println("ittvagyunk");
-            System.out.println(req.params("id"));
-/*            CustomerDao customerDataStore = CustomerDaoWithJdbc.getInstance();
-            OrderDao orderDataStore = OrderDaoWithJdbc.getInstance();
-            String param = req.params("id");
-            int customerId = Integer.valueOf(param);
-            Customer customer = customerDataStore.find(customerId);
-            Order order = new Order(customer);
-            orderDataStore.add(order);
-            int orderId = order.getId();
-            List<LineItem> orderedItems = order.getOrderedItems().getShoppingCartContent();
-            for (LineItem orderedItem : orderedItems) {
-                orderedItemsDataStore.add(orderId, orderedItem);
-            }*/
-
             return true;
         });
 
         get("/change-quantity/:id/:quantity", (Request req, Response res) -> {
+            logger.info("Changing quantity of product");
+            logger.debug("Changing quantity to: {}, of product with id: {}.", req.params(":quantity"), req.params(":id"));
             String id = req.params("id");
             String quantity = req.params("quantity");
             int itemId = Integer.valueOf(id);
             int newQuantity = Integer.valueOf(quantity);
-            System.out.println(newQuantity);
             ShoppingCart.getInstance().findLineItemById(itemId).setQuantity(newQuantity);
             return true;
         });

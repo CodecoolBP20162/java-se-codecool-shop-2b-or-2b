@@ -4,6 +4,8 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 
 public class SupplierDaoWithJdbc implements SupplierDao {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(SupplierDaoWithJdbc.class);
     private static SupplierDaoWithJdbc instance = null;
 
     /** A protected Constructor prevents any other class from instantiating.
@@ -35,6 +37,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
 
     public static SupplierDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", SupplierDaoWithJdbc.class.getSimpleName());
             instance = new SupplierDaoWithJdbc();
         }
         return instance;
@@ -96,8 +99,10 @@ public class SupplierDaoWithJdbc implements SupplierDao {
                 supplier.setId(id);
                 supplier.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(supplier));
             }
+            logger.info("{} - Supplier found in DB", supplier.getName());
 
         } catch (SQLException e) {
+            logger.warn("Supplier not found in DB");
             e.printStackTrace();
         }
         return supplier;
@@ -127,6 +132,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
             }
 
         } catch (SQLException e) {
+            logger.warn("Supplier not found in DB");
             e.printStackTrace();
         }
         return supplier;
@@ -172,7 +178,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     /**
      * The getAll method runs a query to get all entries from suppliers table.
      *
-     * @return ArrayList<Supplier> A list of Supplier objects from the suppliers table.
+     * @return A list of Supplier objects from the suppliers table.
      */
     @Override
     public ArrayList<Supplier> getAll() {
