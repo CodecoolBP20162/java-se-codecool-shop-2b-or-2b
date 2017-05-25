@@ -1,5 +1,7 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.dao.implementation.DbConnectionProvider;
+
 import java.sql.*;
 
 /**
@@ -28,4 +30,14 @@ public class DBController {
                 DB_PASSWORD);
     }
 
+    public static DbConnectionProvider getInstance() {
+        return () -> {
+            try {
+                return getConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        };
+    }
 }
