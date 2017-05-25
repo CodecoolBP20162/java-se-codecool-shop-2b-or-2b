@@ -16,16 +16,16 @@ import java.util.List;
  * The ProductDaoWithJdbc class implements the ProductDao interface.
  * Singleton class, can be created only one instance.
  * You can do some database action:
- * add new product to database,
- * find a product by an id
- * find a product by name
- * remove product from the database by id
+ * - add new product to database,
+ * - find a product by an id and by name
+ * - remove product from the database by id
+ * - filter products by Supplier, and ProductCategory
  */
 public class ProductDaoWithJdbc implements ProductDao {
 
     private static ProductDaoWithJdbc instance = null;
 
-    /* A private Constructor prevents any other class from instantiating.
+    /** A protected Constructor prevents any other class from instantiating.
      */
     protected ProductDaoWithJdbc() {
     }
@@ -38,10 +38,10 @@ public class ProductDaoWithJdbc implements ProductDao {
     }
 
     /**
-     * The add method saves the product data in the database
+     * The add method saves the product data in the database.
      * Catch SQLException if DB connection is failed.
      *
-     * @param product object
+     * @param product Product object
      */
     @Override
     public void add(Product product) {
@@ -76,10 +76,9 @@ public class ProductDaoWithJdbc implements ProductDao {
      * Creates a product instance with the acquired data and returns it.
      * Catch SQLException if DB connection or query fails.
      *
-     * @param id
-     * @return product
+     * @param id The id of Product to find.
+     * @return product Product object with the provided id.
      */
-
     @Override
     public Product find(int id) {
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
@@ -118,8 +117,8 @@ public class ProductDaoWithJdbc implements ProductDao {
      * Creates a product instance with the acquired data and returns it.
      * Catch SQLException if DB connection or query fails.
      *
-     * @param name
-     * @return product
+     * @param name The name of the Product to find.
+     * @return product Product object with the provided name.
      */
     public Product find(String name) {
         String query = "SELECT product_categories.name AS pc_name, products.name AS p_name, suppliers.name AS s_name, * " +
@@ -155,7 +154,7 @@ public class ProductDaoWithJdbc implements ProductDao {
      * The remove method is deleting entry from products table by id.
      * Catch SQLException if DB connection or query fails.
      *
-     * @param id
+     * @param id The id of the Product to remove.
      */
     @Override
     public void remove(int id) {
@@ -169,9 +168,9 @@ public class ProductDaoWithJdbc implements ProductDao {
     }
 
     /**
-     * Creates a query to get all entries from products table.
+     * The getAll method runs a query to get all entries from products table.
      *
-     * @return List<Product>
+     * @return List<Product> A list of Products from the products table.
      */
     @Override
     public List<Product> getAll() {
@@ -181,10 +180,11 @@ public class ProductDaoWithJdbc implements ProductDao {
     }
 
     /**
-     * Creates a query to get entries from products table filtered by the given supplier object.
+     * The getBy method runs a query to get entries from products table filtered by the given Supplier object.
      *
-     * @param supplier
-     * @return List<Product>
+     * @param supplier A Supplier object to filter by.
+     * @return List<Product> A list of Product objects, filtered by a Supplier.
+     *
      */
     @Override
     public List<Product> getBy(Supplier supplier) {
@@ -194,10 +194,10 @@ public class ProductDaoWithJdbc implements ProductDao {
     }
 
     /**
-     * Creates a query to get entries from products table filtered by the given ProductCategory object.
+     * This getBy method runs a query to get entries from products table filtered by the given ProductCategory object.
      *
-     * @param productCategory
-     * @return List<Product>
+     * @param productCategory A ProductCategory object to filter by.
+     * @return List<Product> A list of Product objects, filtered by a ProductCategory.
      */
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
@@ -207,7 +207,8 @@ public class ProductDaoWithJdbc implements ProductDao {
     }
 
     /**
-     * Creates a query to delete all entries from products table.
+     * The clearAll method creates a query to delete all entries from products table.
+     * We only use it in the tests.
      * Catch SQLException if DB connection or query fails.
      */
     @Override
@@ -224,9 +225,10 @@ public class ProductDaoWithJdbc implements ProductDao {
     /**
      * It gets a query as parameter and it processes the result.
      * Catch SQLException if DB connection or query fails.
+     * A list of Product objects, filtered by a Supplier.
      *
-     * @param query
-     * @return ArrayList<Product>
+     * @param query A String object contains an SQL query.
+     * @return ArrayList<Product> An ArrayList of Product objects, based on the query content.
      */
 
     private ArrayList<Product> queryExecuteHandler(String query) {

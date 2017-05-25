@@ -19,6 +19,7 @@ import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
 /**
+  * <h1>Codecool Shop</h1>
   * The main method of the Codecool Shop. It uses thymeleaf for templates and Spark as the web framework.
   * It has two static methods: main and populateData.
   *

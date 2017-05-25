@@ -15,15 +15,22 @@ import java.sql.*;
  * You can do some database action:
  * add new customer to database,
  * find a customer by an id
- * find a customer by phone number
+ * find a customer by phone number.
  */
 public class CustomerDaoWithJdbc implements CustomerDao {
 
     private static CustomerDaoWithJdbc instance = null;
 
+    /**
+     * Default constructor.
+     */
     protected CustomerDaoWithJdbc() {
     }
 
+    /**
+     * This constructor prevents any other class from instantiating.
+     * @return CustomerDaoWithJdbc instance (singleton).
+     */
     public static CustomerDaoWithJdbc getInstance() {
         if (instance == null) {
             instance = new CustomerDaoWithJdbc();
@@ -32,11 +39,11 @@ public class CustomerDaoWithJdbc implements CustomerDao {
     }
 
     /**
-     * The add method saves the customer data (name, email, phone number, billing and shipping address)
+     * The add method saves the customer data (name, email, phone number, billing and shipping address) to database.
      * Catch SQLException if DB connection is failed.
      * PreparedStatement class is help to prevent SQL injection.
      *
-     * @param customer object
+     * @param customer The customer instance to save data to database.
     */
     @Override
     public void add(Customer customer) {
@@ -59,11 +66,10 @@ public class CustomerDaoWithJdbc implements CustomerDao {
 
     /**
      * The find method is searching in customers table and returns the customer with the given id.
-     * Creates a customer instance with the acquired data and return it.
      * Catch SQLException if DB connection or query fails.
      *
-     * @param id
-     * @return customer
+     * @param id The id of customer to find in database.
+     * @return customer instance.
      */
     @Override
     public Customer find(int id) {
@@ -93,8 +99,8 @@ public class CustomerDaoWithJdbc implements CustomerDao {
      * The findByPhoneNumber method is searching in customers table and returns the customer's id with the given phoneNumber.
      * Catch SQLException if DB connection or query fails.
      *
-     * @param phoneNumber
-     * @return id
+     * @param phoneNumber The phone number of the customer to find in database.
+     * @return id of the Customer.
      */
     @Override
     public int findByPhoneNumber(int phoneNumber) {
