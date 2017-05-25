@@ -94,6 +94,32 @@ class MockProductDaoTest {
         verify(mockStatement).executeUpdate(expect);
     }
 
+    @Test
+    void add_whenMoreItems_raisesIdWithOne() throws SQLException {
+        Product product4 = new Product("brokkoli", 50, "USD",
+                "Healthy stuff", zoldseg, zoldseges);
+
+        ResultSet mockSetForAdd = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSetForAdd.next()).thenReturn(true).thenReturn(false);
+        when(mockSetForAdd.getString(anyString())).thenReturn("USD");
+        when(mockSetForAdd.getInt(anyInt())).thenReturn(1);
+
+        ResultSet mockSetForFind = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSetForFind.next()).thenReturn(true).thenReturn(false);
+        when(mockSetForFind.getString(anyString())).thenReturn("USD");
+        when(mockSetForFind.getInt(anyInt())).thenReturn(1);
+
+        when(mockStatement.executeQuery(anyString()))
+                .thenReturn(mockSetForFind)
+                .thenReturn(mockSetForAdd);
+
+        productDataStore.add(product4);
+
+        assertEquals(product4.getId(), 2);
+    }
+
 
     @Test
     void find_executesValidInsertStatement() throws SQLException {
@@ -115,6 +141,7 @@ class MockProductDaoTest {
         when(mockSet.getString(anyString())).thenReturn("USD");
         when(mockSet.getInt(anyInt())).thenReturn(1);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+
         Product actual = productDataStore.find(1);
 
         assertEquals(actual.getId(), 1);
@@ -129,13 +156,12 @@ class MockProductDaoTest {
         when(mockSet.getString(anyString())).thenReturn("USD");
         when(mockSet.getInt(anyInt())).thenReturn(1);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+
         Product actual = productDataStore.find("name");
 
         assertEquals(actual.getId(), 0);
         assertEquals(actual.getName(), "USD");
     }
-
-
 
     @Test
     void find_searchesProductsByIdNotPresent_returnsNull() throws SQLException {
@@ -201,6 +227,18 @@ class MockProductDaoTest {
         String expect = "SELECT id FROM products WHERE product_category=" + gyumolcs.getId() + ";";
 
         verify(mockStatement).executeQuery(expect);
+    }
+
+    @Test
+    void add_swallowsSqlException() throws SQLException {
+        Product product4 = new Product("brokkoli", 50, "USD",
+                "Healthy stuff", zoldseg, zoldseges);
+
+        ResultSet mockSet = mock(ResultSet.class);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        productDataStore.add(product4);
     }
 
     @Test
