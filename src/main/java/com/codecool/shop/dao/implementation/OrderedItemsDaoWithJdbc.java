@@ -12,16 +12,26 @@ import java.util.List;
 
 /**
  * Created by joker on 2017.05.10..
+ * <h1>OrderedItemsDaoWithJdbc class!</h1>
+ * The OrderedItemsDaoWithJdbc class implements the OrderedItemsDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do database action:
+ * add new orderedItem to database.
  */
 public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
 
     private static OrderedItemsDaoWithJdbc instance = null;
 
-    /* A private Constructor prevents any other class from instantiating.
+    /**
+     * Default constructor.
      */
     protected OrderedItemsDaoWithJdbc() {
     }
 
+    /**
+     * This constructor prevents any other class from instantiating.
+     * @return OrderedItemsDaoWithJdbc instance (singleton).
+     */
     public static OrderedItemsDaoWithJdbc getInstance() {
         if (instance == null) {
             instance = new OrderedItemsDaoWithJdbc();
@@ -29,6 +39,12 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
         return instance;
     }
 
+    /**
+     * The add method saves the orderedItem data (order ID, product ID, quantity) to database.
+     * Catch SQLException if DB connection is failed.
+     *
+     * @param orderedItem The orderedItem instance to save data to database.
+     */
     @Override
     public void add(int id, LineItem orderedItem) {
 
@@ -44,12 +60,21 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
     }
 
 
-
+    /**
+     * The clearAll method deletes all ordered items from database.
+     * Used for tests.
+     * Catch SQLException if DB connection is failed.
+     */
     @Override
     public void clearAll() {
 
     }
 
+    /**
+     * This getByOrderId method returns order(s) found in database by ID
+     * @param id The id of the order.
+     * @return List of orders or null
+     */
     @Override
     public List<OrderedItems> getByOrderId(int id) {
         return null;

@@ -15,16 +15,29 @@ import java.util.List;
 
 /**
  * Created by joker on 2017.05.10..
+ * <h1>OrderDaoWithJdbc class!</h1>
+ * The OrderDaoWithJdbc class implements the OrderDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do some database action:
+ * add new order to database,
+ * get orders by customer Id from database,
+ * get shopping cart content,
+ * find a orders by customer Id in database.
  */
 public class OrderDaoWithJdbc implements OrderDao{
 
     private static OrderDaoWithJdbc instance = null;
 
-    /* A private Constructor prevents any other class from instantiating.
+    /**
+     * Default constructor.
      */
     protected OrderDaoWithJdbc() {
     }
 
+    /**
+     * This constructor prevents any other class from instantiating.
+     * @return OrderDaoWithJdbc instance (singleton).
+     */
     public static OrderDaoWithJdbc getInstance() {
         if (instance == null) {
             instance = new OrderDaoWithJdbc();
@@ -32,6 +45,12 @@ public class OrderDaoWithJdbc implements OrderDao{
         return instance;
     }
 
+    /**
+     * The add method saves the order data (customer ID, total price) to database.
+     * Catch SQLException if DB connection is failed.
+     *
+     * @param order The order instance to save data to database.
+     */
     @Override
     public void add(Order order){
         Customer customer = order.getCustomer();
@@ -49,7 +68,11 @@ public class OrderDaoWithJdbc implements OrderDao{
 
     }
 
-
+    /**
+     * The clearAll method deletes all orders from database.
+     * Used for tests.
+     * Catch SQLException if DB connection is failed.
+     */
     @Override
     public void clearAll() {
         String query = "DELETE FROM orders;";
@@ -61,19 +84,38 @@ public class OrderDaoWithJdbc implements OrderDao{
         }
     }
 
+    /**
+     * The getOrdersByCustomerId method is searching in customers table and returns the customer with the given id.
+     *
+     * @param customer_id The id of customer to find in database.
+     * @return Order array list.
+     * @see #queryExecuteHandler(String)
+     */
     @Override
     public ArrayList<Order> getOrdersByCustomerId(int customer_id) {
         String query = "SELECT id FROM orders WHERE customer_id=" + customer_id + ";";
         return queryExecuteHandler(query);
     }
 
+    /**
+     * This method gets shopping cart content.
+     * @return List of order / or null
+     */
     @Override
     public List<Order> getShoppingCartContent() {
         return null;
     }
 
+    /**
+     * The find method is searching orders in database by given a given order ID and returns the order.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id The id of customer to find in database.
+     * @return Order instance.
+     */
     public Order find(int id) {
-        String query = "SELECT * FROM orders LEFT JOIN customers ON orders.customer_id=customer.id WHERE orders.customer_id ='" + id + "';";
+        String query = "SELECT * FROM orders LEFT JOIN customers ON orders.customer_id=customer.id " +
+                "WHERE orders.customer_id ='" + id + "';";
         Order order = null;
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()){
             ResultSet result = statement.executeQuery(query);
@@ -94,6 +136,13 @@ public class OrderDaoWithJdbc implements OrderDao{
         return order;
     }
 
+    /**
+     * This method is a query helper used by getAll() and getBy() methods.
+     * Catch SQLException if DB connection or query fails.
+     * @param query String type
+     * @see #getOrdersByCustomerId(int)
+     * @return An Array List of orders / or NULL
+     */
     private ArrayList<Order> queryExecuteHandler(String query) {
         ArrayList<Order> allOrders = new ArrayList<>();
         try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
