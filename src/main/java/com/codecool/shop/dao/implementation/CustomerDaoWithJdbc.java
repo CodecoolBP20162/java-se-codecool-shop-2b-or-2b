@@ -3,6 +3,8 @@ package com.codecool.shop.dao.implementation;
 import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.CustomerDao;
 import com.codecool.shop.model.Customer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
@@ -19,6 +21,7 @@ import java.sql.*;
  */
 public class CustomerDaoWithJdbc implements CustomerDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomerDaoWithJdbc.class);
     private static CustomerDaoWithJdbc instance = null;
 
     /**
@@ -33,6 +36,7 @@ public class CustomerDaoWithJdbc implements CustomerDao {
      */
     public static CustomerDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", CustomerDaoWithJdbc.class.getSimpleName());
             instance = new CustomerDaoWithJdbc();
         }
         return instance;
@@ -47,9 +51,6 @@ public class CustomerDaoWithJdbc implements CustomerDao {
     */
     @Override
     public void add(Customer customer) {
-
-        System.out.println(customer.getName());
-        System.out.println(customer.getEmail());
         try (Connection connection = DBController.getConnection()) {
             PreparedStatement pstmt = connection.prepareStatement("INSERT INTO customers (name, email, " +
                     "phone_number, billing_address, shipping_address) VALUES (?, ?, ?, ?, ?)");
@@ -59,6 +60,7 @@ public class CustomerDaoWithJdbc implements CustomerDao {
             pstmt.setString(4, String.valueOf(customer.getBillingAddress()));
             pstmt.setString(5, String.valueOf(customer.getShippingAddress()));
             pstmt.executeUpdate();
+            logger.info("New customer is created and saved in DB: {}", customer.getName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,6 +90,7 @@ public class CustomerDaoWithJdbc implements CustomerDao {
             }
 
         } catch (SQLException e) {
+            logger.warn("Customer cannot be found in DB by the given ID");
             e.printStackTrace();
         }
 
@@ -114,6 +117,7 @@ public class CustomerDaoWithJdbc implements CustomerDao {
             }
 
         } catch (SQLException e) {
+            logger.warn("Customer cannot be found in DB by the given phone number");
             e.printStackTrace();
         }
 

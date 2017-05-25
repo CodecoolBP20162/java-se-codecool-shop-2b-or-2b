@@ -4,6 +4,8 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.OrderedItemsDao;
 import com.codecool.shop.model.LineItem;
 import com.codecool.shop.model.OrderedItems;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,6 +22,7 @@ import java.util.List;
  */
 public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderedItemsDaoWithJdbc.class);
     private static OrderedItemsDaoWithJdbc instance = null;
 
     /**
@@ -34,6 +37,7 @@ public class OrderedItemsDaoWithJdbc implements OrderedItemsDao {
      */
     public static OrderedItemsDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", OrderedItemsDaoWithJdbc.class.getSimpleName());
             instance = new OrderedItemsDaoWithJdbc();
         }
         return instance;

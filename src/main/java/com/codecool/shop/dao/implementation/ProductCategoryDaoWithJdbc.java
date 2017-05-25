@@ -4,8 +4,13 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +27,7 @@ import java.util.List;
  */
 public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryDaoWithJdbc.class);
     private static ProductCategoryDaoWithJdbc instance = null;
 
     /** A protected Constructor prevents any other class from instantiating.
@@ -31,6 +37,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     public static ProductCategoryDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", ProductCategoryDaoWithJdbc.class.getSimpleName());
             instance = new ProductCategoryDaoWithJdbc();
         }
         return instance;
@@ -96,6 +103,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             }
 
         } catch (SQLException e) {
+            logger.warn("Category not found in DB");
             e.printStackTrace();
         }
         return category;
@@ -127,6 +135,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
             }
         } catch (SQLException e) {
+            logger.warn("Category not found in DB");
             e.printStackTrace();
         }
 
@@ -154,7 +163,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     /**
      * The getAll method runs a query to get all entries from product_categories table.
      *
-     * @return List<ProductCategory> A list of ProductCategories from the product_categories table.
+     * @return A list of ProductCategories from the product_categories table.
      */
     @Override
     public List<ProductCategory> getAll() {

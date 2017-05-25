@@ -55,7 +55,7 @@ public interface ProductCategoryDao {
     /**
      * The getAll method runs a query to get all entries from product_categories table.
      *
-     * @return List<ProductCategory> A list of ProductCategories from the product_categories table.
+     * @return List of ProductCategory from the product_categories table.
      */
     List<ProductCategory> getAll();
 
