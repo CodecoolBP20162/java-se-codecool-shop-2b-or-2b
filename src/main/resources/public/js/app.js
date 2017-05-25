@@ -162,7 +162,3 @@ function showEmptyCartMessage() {
 function payment() {
     $("#userData").submit();
 }
-
-
-
-
