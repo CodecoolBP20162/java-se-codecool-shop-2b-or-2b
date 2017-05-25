@@ -30,6 +30,17 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         return instance;
     }
 
+    public SupplierDao setConnectionProvider(DbConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
+        return this;
+    }
+
+    private DbConnectionProvider connectionProvider = DBController.getInstance();
+
+    private Connection getConnection() throws SQLException {
+        return connectionProvider.getConnection();
+    }
+
 
     @Override
     public void add(Supplier supplier) {
@@ -47,7 +58,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
             String query = "INSERT INTO suppliers (id, name, description)" +
                     "VALUES ('" + id + "','" + supplier.getName() + "', '" + supplier.getDescription() + "');";
 
-            try (Connection connection = DBController.getConnection();
+            try (Connection connection = getConnection();
                  Statement statement = connection.createStatement()) {
                 statement.executeUpdate(query);
                 supplier.setId(id);
@@ -63,7 +74,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         String query = "SELECT * FROM suppliers WHERE id='" + id + "';";
         Supplier supplier = null;
 
-        try (Connection connection = DBController.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
@@ -86,7 +97,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         String query = "SELECT * FROM suppliers WHERE name='" + name + "';";
         Supplier supplier = null;
 
-        try (Connection connection = DBController.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
             if (result.next()) {
@@ -107,7 +118,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     public void remove(int id) {
         String query = "DELETE FROM suppliers WHERE id='" + id + "';";
 
-        try (Connection connection = DBController.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
@@ -119,7 +130,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
     public void clearAll() {
         String query = "DELETE FROM suppliers;";
 
-        try (Connection connection = DBController.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
@@ -133,7 +144,7 @@ public class SupplierDaoWithJdbc implements SupplierDao {
         ArrayList<Supplier> suppliers = new ArrayList();
         String query = "SELECT * FROM suppliers;";
 
-        try (Connection connection = DBController.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
