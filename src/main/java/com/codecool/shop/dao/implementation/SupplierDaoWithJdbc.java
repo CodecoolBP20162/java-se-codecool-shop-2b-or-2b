@@ -111,8 +111,8 @@ public class SupplierDaoWithJdbc implements SupplierDao {
                         result.getString("description"));
                 supplier.setId(id);
                 supplier.setProducts((ArrayList<Product>) new ProductDaoWithJdbc().getBy(supplier));
+                logger.info("{} - Supplier found in DB", supplier.getName());
             }
-            logger.info("{} - Supplier found in DB", supplier.getName());
 
         } catch (SQLException e) {
             logger.warn("Supplier not found in DB");
