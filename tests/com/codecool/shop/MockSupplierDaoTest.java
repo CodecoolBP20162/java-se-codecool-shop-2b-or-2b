@@ -7,6 +7,7 @@ import com.codecool.shop.dao.implementation.DbConnectionProvider;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoWithJdbc;
 import com.codecool.shop.dao.implementation.ProductDaoWithJdbc;
 import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
+import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -132,6 +134,71 @@ class MockSupplierDaoTest {
         String expect = "SELECT * FROM suppliers;";
 
         verify(mockStatement).executeQuery(expect);
+    }
+
+    @Test
+    void findById_parsesResultSet() throws SQLException {
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("mockString");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+        Supplier actual = supplierDataStore.find(1);
+
+        assertEquals(actual.getId(), 1);
+        assertEquals(actual.getName(), "mockString");
+    }
+
+    @Test
+    void findByName_parsesResultSet() throws SQLException {
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("mockString");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+        Supplier actual = supplierDataStore.find("mockString");
+
+        assertEquals(actual.getId(), 0);
+        assertEquals(actual.getName(), "mockString");
+    }
+
+
+    @Test
+    void findById_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeQuery(anyString())).thenThrow(SQLException.class);
+
+        supplierDataStore.find(1);
+    }
+
+    @Test
+    void findByName_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeQuery(anyString())).thenThrow(SQLException.class);
+
+        supplierDataStore.find("name");
+    }
+
+
+    @Test
+    void getAll_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeQuery(anyString())).thenThrow(SQLException.class);
+
+        supplierDataStore.getAll();
+    }
+
+    @Test
+    void remove_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        supplierDataStore.remove(1);
+    }
+
+    @Test
+    void clearAll_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        supplierDataStore.clearAll();
     }
 
 
