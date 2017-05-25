@@ -4,25 +4,40 @@ import com.codecool.shop.controller.DBController;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kata on 2017.05.09..
+ * <h1>ProductCategoryDaoWithJdbc class!</h1>
+ * The ProductCategoryDaoWithJdbc class implements the ProductCategoryDao interface.
+ * Singleton class, can be created only one instance.
+ * You can do some database action:
+ * - add new productcategory to database,
+ * - find a productcategory by an id
+ * - find a productcategory by name
+ * - remove productcategory from the database by id
  */
 public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryDaoWithJdbc.class);
     private static ProductCategoryDaoWithJdbc instance = null;
 
-    /* A private Constructor prevents any other class from instantiating.
+    /** A protected Constructor prevents any other class from instantiating.
      */
     protected ProductCategoryDaoWithJdbc() {
     }
 
     public static ProductCategoryDaoWithJdbc getInstance() {
         if (instance == null) {
+            logger.debug("Creating new {}", ProductCategoryDaoWithJdbc.class.getSimpleName());
             instance = new ProductCategoryDaoWithJdbc();
         }
         return instance;
@@ -39,6 +54,13 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return connectionProvider.getConnection();
     }
 
+
+    /**
+     * The add method saves the productcategory's data in the database
+     * Catch SQLException if DB connection is failed.
+     *
+     * @param category ProductCategory object
+     */
 
     @Override
     public void add(ProductCategory category) {
@@ -66,6 +88,15 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         }
     }
 
+    /**
+     * The find method is searching in product_categories table and returns the productCategory with the given id.
+     * Creates a productCategory instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id The id of ProductCategory to find.
+     * @return category ProductCategory object with the provided id.
+     */
+
     @Override
     public ProductCategory find(int id) {
         ProductCategory category = null;
@@ -85,11 +116,20 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             }
 
         } catch (SQLException e) {
+            logger.warn("Category not found in DB");
             e.printStackTrace();
         }
         return category;
     }
 
+    /**
+     * The find method is searching in product_categories table and returns the productCategory with the given name.
+     * Creates a productCategory instance with the acquired data and returns it.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param name The name of the ProductCategory to find.
+     * @return category ProductCategory object with the provided name.
+     */
     @Override
     public ProductCategory find(String name) {
         ProductCategory category = null;
@@ -108,6 +148,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
             }
         } catch (SQLException e) {
+            logger.warn("Category not found in DB");
             e.printStackTrace();
         }
 
@@ -115,6 +156,12 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
 
     }
 
+    /**
+     * The remove method is deleting entry from product_categories table by id.
+     * Catch SQLException if DB connection or query fails.
+     *
+     * @param id The id of the ProductCategory to remove.
+     */
     @Override
     public void remove(int id) {
         String query = "DELETE FROM product_categories WHERE id='" + id + "';";
@@ -126,6 +173,11 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         }
     }
 
+    /**
+     * The getAll method runs a query to get all entries from product_categories table.
+     *
+     * @return A list of ProductCategories from the product_categories table.
+     */
     @Override
     public List<ProductCategory> getAll() {
         List<ProductCategory> allCategories = new ArrayList<>();
@@ -152,6 +204,11 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return null;
     }
 
+    /**
+     * The clearAll method creates a query to delete all entries from product_categories table.
+     * We only use it in the tests.
+     * Catch SQLException if DB connection or query fails.
+     */
     @Override
     public void clearAll() {
         String query = "DELETE FROM product_categories;";
