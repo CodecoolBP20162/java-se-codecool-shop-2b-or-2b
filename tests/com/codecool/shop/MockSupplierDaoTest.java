@@ -68,6 +68,23 @@ class MockSupplierDaoTest {
     }
 
     @Test
+    void add_whenMoreItems_raisesIdWithOne() throws SQLException {
+        Supplier healthian = new Supplier("healthian",
+                "Delivers all kinds of healthy stuff like seeds and grass");
+
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("mockString");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+
+        supplierDataStore.add(healthian);
+
+        assertEquals(healthian.getId(), 2);
+    }
+
+    @Test
     void add_executesValidInsertStatement() throws SQLException {
         Supplier healthian = new Supplier("healthian",
                 "Delivers all kinds of healthy stuff like seeds and grass");
@@ -83,6 +100,7 @@ class MockSupplierDaoTest {
         verify(mockStatement).executeUpdate(expect);
     }
 
+    @Test
     void findById_executesValidInsertStatement() throws SQLException {
         when(mockStatement.executeQuery(anyString())).thenReturn(mock(ResultSet.class));
         supplierDataStore.find(1);
@@ -92,6 +110,7 @@ class MockSupplierDaoTest {
         verify(mockStatement).executeQuery(expect);
     }
 
+    @Test
     void findByName_executesValidInsertStatement() throws SQLException {
         when(mockStatement.executeQuery(anyString())).thenReturn(mock(ResultSet.class));
         supplierDataStore.find("Lenovo");
@@ -176,6 +195,17 @@ class MockSupplierDaoTest {
         List<Supplier> actual = supplierDataStore.getAll();
 
         assertEquals(actual.size(), 1);
+    }
+
+    @Test
+    void add_swallowsSqlException() throws SQLException {
+        Supplier healthian = new Supplier("healthian",
+                "Delivers all kinds of healthy stuff like seeds and grass");
+        ResultSet mockSet = mock(ResultSet.class);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        supplierDataStore.add(healthian);
     }
 
 

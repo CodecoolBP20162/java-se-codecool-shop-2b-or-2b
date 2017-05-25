@@ -79,21 +79,39 @@ class MockProductCategoryTest {
         verify(mockStatement).executeUpdate(expect);
     }
 
+    @Test
+    void add_whenMoreItems_raisesIdWithOne() throws SQLException {
+        ProductCategory mushrooms = new ProductCategory("mushrooms", "Edibles",
+                "Thing to eat with weird taste, sometimes poisonous");
 
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("mockString");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+
+        productCategoryDataStore.add(mushrooms);
+
+        assertEquals(mushrooms.getId(), 2);
+    }
+
+    @Test
     void findById_executesValidInsertStatement() throws SQLException {
         when(mockStatement.executeQuery(anyString())).thenReturn(mock(ResultSet.class));
         productCategoryDataStore.find(1);
 
-        String expect = "SELECT * FROM product_categories WHERE id='1';";
+        String expect = "SELECT * FROM product_categories WHERE id ='1';";
 
         verify(mockStatement).executeQuery(expect);
     }
 
+    @Test
     void findByName_executesValidInsertStatement() throws SQLException {
         when(mockStatement.executeQuery(anyString())).thenReturn(mock(ResultSet.class));
         productCategoryDataStore.find("Lenovo");
 
-        String expect = "SELECT * FROM product_categories WHERE name='Lenovo';";
+        String expect = "SELECT * FROM product_categories WHERE name ='Lenovo';";
 
         verify(mockStatement).executeQuery(expect);
     }
@@ -174,6 +192,18 @@ class MockProductCategoryTest {
         assertEquals(actual.size(), 1);
     }
 
+    @Test
+    void add_swallowsSqlException() throws SQLException {
+        ResultSet mockSet = mock(ResultSet.class);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+
+        ProductCategory mushrooms = new ProductCategory("mushrooms", "Edibles",
+                "Thing to eat with weird taste, sometimes poisonous");
+
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        productCategoryDataStore.add(mushrooms);
+    }
 
     @Test
     void findById_swallowsSqlException() throws SQLException {
