@@ -96,7 +96,7 @@ class MockProductDaoTest {
 
 
     @Test
-    void find_findsProductBasedOnId() throws SQLException {
+    void find_executesValidInsertStatement() throws SQLException {
         when(mockStatement.executeQuery(anyString())).thenReturn(mock(ResultSet.class));
         productDataStore.find(1);
 
@@ -106,6 +106,35 @@ class MockProductDaoTest {
 
         verify(mockStatement).executeQuery(expect);
     }
+
+    @Test
+    void findById_parsesResultSet() throws SQLException {
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("USD");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+        Product actual = productDataStore.find(1);
+
+        assertEquals(actual.getId(), 1);
+        assertEquals(actual.getName(), "USD");
+    }
+
+    @Test
+    void findByName_parsesResultSet() throws SQLException {
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("USD");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+        Product actual = productDataStore.find("name");
+
+        assertEquals(actual.getId(), 0);
+        assertEquals(actual.getName(), "USD");
+    }
+
 
 
     @Test
@@ -173,6 +202,42 @@ class MockProductDaoTest {
 
         verify(mockStatement).executeQuery(expect);
     }
+
+    @Test
+    void findById_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeQuery(anyString())).thenThrow(SQLException.class);
+
+        productDataStore.find(1);
+    }
+
+    @Test
+    void findByName_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeQuery(anyString())).thenThrow(SQLException.class);
+
+        productDataStore.find("name");
+    }
+
+    @Test
+    void getAll_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeQuery(anyString())).thenThrow(SQLException.class);
+
+        productDataStore.getAll();
+    }
+
+    @Test
+    void remove_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        productDataStore.remove(1);
+    }
+
+    @Test
+    void clearAll_swallowsSqlException() throws SQLException {
+        when(mockStatement.executeUpdate(anyString())).thenThrow(SQLException.class);
+
+        productDataStore.clearAll();
+    }
+
 
     @AfterEach
     public void tearDown() {

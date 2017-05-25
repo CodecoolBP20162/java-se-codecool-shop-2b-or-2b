@@ -6,6 +6,7 @@ import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,7 @@ public class ProductDaoWithJdbc implements ProductDao {
         return this;
     }
 
-    private DbConnectionProvider connectionProvider = () -> {
-        try {
-            return DBController.getConnection();
-        } catch (SQLException e) {
-            return null;
-        }
-    };
+    private DbConnectionProvider connectionProvider = DBController.getInstance();
 
     private Connection getConnection() throws SQLException {
         return connectionProvider.getConnection();
@@ -90,18 +85,7 @@ public class ProductDaoWithJdbc implements ProductDao {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
-                ProductCategory category = new ProductCategory(result.getString("pc_name"),
-                        result.getString("department"),
-                        result.getString("description"));
-                category.setId(result.getInt("product_category"));
-                Supplier supplier = new Supplier(result.getString("s_name"),
-                        result.getString("description"));
-                supplier.setId(result.getInt("supplier"));
-                product = new Product(result.getString("p_name"),
-                        result.getInt("default_price"),
-                        result.getString("currency"),
-                        result.getString("description"),
-                        category, supplier);
+                product = productMaker(result);
                 product.setId(id);
             }
 
@@ -122,22 +106,29 @@ public class ProductDaoWithJdbc implements ProductDao {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
-                ProductCategory category = new ProductCategory(result.getString("pc_name"),
-                        result.getString("department"),
-                        result.getString("description"));
-                category.setId(result.getInt("product_category"));
-                Supplier supplier = new Supplier(result.getString("s_name"),
-                        result.getString("description"));
-                supplier.setId(result.getInt("supplier"));
-                product = new Product(name, result.getInt("default_price"),
-                        result.getString("currency"),
-                        result.getString("description"),
-                        category, supplier);
+                product = productMaker(result);
                 product.setId(result.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return product;
+    }
+
+    private Product productMaker(ResultSet result) throws SQLException {
+        ProductCategory category = new ProductCategory(result.getString("pc_name"),
+                result.getString("department"),
+                result.getString("description"));
+        category.setId(result.getInt("product_category"));
+        Supplier supplier = new Supplier(result.getString("s_name"),
+                result.getString("description"));
+        supplier.setId(result.getInt("supplier"));
+        Product product = new Product(result.getString("p_name"),
+                result.getInt("default_price"),
+                result.getString("currency"),
+                result.getString("description"),
+                category, supplier);
 
         return product;
     }
@@ -179,7 +170,7 @@ public class ProductDaoWithJdbc implements ProductDao {
     public void clearAll() {
         String query = "DELETE FROM products;";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
