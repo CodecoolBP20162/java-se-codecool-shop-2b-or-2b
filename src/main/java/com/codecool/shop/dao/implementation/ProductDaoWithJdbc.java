@@ -30,6 +30,26 @@ public class ProductDaoWithJdbc implements ProductDao {
     }
 
 
+    public ProductDao setConnectionProvider(DbConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
+        return this;
+    }
+
+    private DbConnectionProvider connectionProvider = () -> {
+        try {
+            return DBController.getConnection();
+        } catch (SQLException e) {
+            return null;
+        }
+    };
+
+    private Connection getConnection() throws SQLException {
+        return connectionProvider.getConnection();
+    }
+
+
+
+
     @Override
     public void add(Product product) {
         int id;
@@ -49,7 +69,8 @@ public class ProductDaoWithJdbc implements ProductDao {
                     + product.getDescription() + "', '"
                     + product.getSupplier().getId() + "', '"
                     + product.getProductCategory().getId() + "');";
-            try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+            try (Connection connection = getConnection();
+                 Statement statement = connection.createStatement()) {
                 statement.executeUpdate(query);
                 product.setId(id);
             } catch (SQLException e) {
@@ -65,7 +86,7 @@ public class ProductDaoWithJdbc implements ProductDao {
                 "LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.id ='" + id + "';";
         Product product = null;
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
@@ -97,7 +118,7 @@ public class ProductDaoWithJdbc implements ProductDao {
                 "LEFT JOIN suppliers ON products.supplier=suppliers.id WHERE products.name ='" + name + "';";
 
         Product product = null;
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
@@ -125,7 +146,8 @@ public class ProductDaoWithJdbc implements ProductDao {
     public void remove(int id) {
         String query = "DELETE FROM products WHERE id = '" + id + "';";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -168,7 +190,7 @@ public class ProductDaoWithJdbc implements ProductDao {
     private ArrayList<Product> queryExecuteHandler(String query) {
         ArrayList<Product> allProducts = new ArrayList<>();
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
             while (result.next()) {
                 Product product = find(result.getInt("id"));
