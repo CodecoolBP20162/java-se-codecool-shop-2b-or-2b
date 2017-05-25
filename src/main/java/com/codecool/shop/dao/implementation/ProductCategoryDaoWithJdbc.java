@@ -28,6 +28,17 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         return instance;
     }
 
+    public ProductCategoryDao setConnectionProvider(DbConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
+        return this;
+    }
+
+    private DbConnectionProvider connectionProvider = DBController.getInstance();
+
+    private Connection getConnection() throws SQLException {
+        return connectionProvider.getConnection();
+    }
+
 
     @Override
     public void add(ProductCategory category) {
@@ -41,11 +52,11 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
             } else {
                 id = 1;
             }
-            String query = " INSERT INTO product_categories (id, name, department, description) " +
+            String query = "INSERT INTO product_categories (id, name, department, description)" +
                     "VALUES ('" + id + "','" + category.getName() + "', '" + category.getDepartment() + "', '"
                     + category.getDescription() + "');";
 
-            try (Connection connection = DBController.getConnection();
+            try (Connection connection = getConnection();
                  Statement statement = connection.createStatement()) {
                 statement.executeUpdate(query);
                 category.setId(id);
@@ -60,7 +71,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE id ='" + id + "';";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
@@ -84,7 +95,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         ProductCategory category = null;
         String query = "SELECT * FROM product_categories WHERE name ='" + name + "';";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
             if (result.next()) {
@@ -108,7 +119,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     public void remove(int id) {
         String query = "DELETE FROM product_categories WHERE id='" + id + "';";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,7 +131,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
         List<ProductCategory> allCategories = new ArrayList<>();
         String query = "SELECT * FROM product_categories;";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(query);
 
             while (result.next()) {
@@ -145,7 +156,7 @@ public class ProductCategoryDaoWithJdbc implements ProductCategoryDao {
     public void clearAll() {
         String query = "DELETE FROM product_categories;";
 
-        try (Connection connection = DBController.getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
