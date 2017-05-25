@@ -164,6 +164,20 @@ class MockSupplierDaoTest {
         assertEquals(actual.getName(), "mockString");
     }
 
+    @Test
+    void getAll_parsesResultSet() throws SQLException {
+        ResultSet mockSet = mock(ResultSet.class);
+        //returns a resultset with one element
+        when(mockSet.next()).thenReturn(true).thenReturn(false);
+        when(mockSet.getString(anyString())).thenReturn("mockString");
+        when(mockSet.getInt(anyInt())).thenReturn(1);
+        when(mockStatement.executeQuery(anyString())).thenReturn(mockSet);
+
+        List<Supplier> actual = supplierDataStore.getAll();
+
+        assertEquals(actual.size(), 1);
+    }
+
 
     @Test
     void findById_swallowsSqlException() throws SQLException {
