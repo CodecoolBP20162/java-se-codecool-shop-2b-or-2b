@@ -9,6 +9,8 @@ import com.codecool.shop.dao.implementation.SupplierDaoWithJdbc;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,9 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 
-/**
- * Created by kata on 2017.05.10..
- */
 class ProductDaoWithJdbcTest {
 
     ProductDao productDataStore = ProductDaoWithJdbc.getInstance();
@@ -35,28 +34,34 @@ class ProductDaoWithJdbcTest {
     Product product1;
     Product product2;
     Product product3;
-
-    @Mock
-    Supplier mockGyumolcsos;
-    Supplier mockZoldseges;
-    ProductCategory mockGyumolcs;
-    ProductCategory mockZoldseg;
-
+    Supplier gyumolcsos;
+    Supplier zoldseges;
+    ProductCategory gyumolcs;
+    ProductCategory zoldseg;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        gyumolcsos = new Supplier("gyumolcsos", "Fruity guy");
+        supplierDataStore.add(gyumolcsos);
+        zoldseges = new Supplier("zoldseges", "Person with vegetables");
+        supplierDataStore.add(zoldseges);
 
-        tearDown();
+        gyumolcs = new ProductCategory("Gyumolcs", "Hardware",
+                "Colorful stuff.");
+        productCategoryDataStore.add(gyumolcs);
+        zoldseg = new ProductCategory("Zoldseg", "Hardware",
+                "Green stuff.");
+        productCategoryDataStore.add(zoldseg);
+
 
         product1 = new Product("alma", 50, "USD",
-                "Tasty", mockGyumolcs, mockGyumolcsos);
+                "Tasty", gyumolcs, gyumolcsos);
         productDataStore.add(product1);
         product2 = new Product("korte", 479, "USD",
-                "Dont like it. Hurts teeths", mockGyumolcs, mockGyumolcsos);
+                "Dont like it. Hurts teeths", gyumolcs, gyumolcsos);
         productDataStore.add(product2);
         product3 = new Product("repa", 89, "USD",
-                "Fav thing of bunnies.", mockZoldseg, mockZoldseges);
+                "Fav thing of bunnies.", zoldseg, zoldseges);
         productDataStore.add(product3);
 
     }
@@ -65,12 +70,10 @@ class ProductDaoWithJdbcTest {
     @Test
     void add_addsNewProductToDatabase() {
         Product product4 = new Product("brokkoli", 50, "USD",
-                "Healthy stuff", mockZoldseg, mockZoldseges);
+                "Healthy stuff", zoldseg, zoldseges);
         productDataStore.add(product4);
 
         assertNotNull(productDataStore.find("brokkoli"));
-
-        tearDown();
     }
 
 
@@ -80,15 +83,11 @@ class ProductDaoWithJdbcTest {
         Product foundProduct = productDataStore.find(productId);
 
         assertEquals(productId, foundProduct.getId());
-
-        tearDown();
     }
 
     @Test
     void find_searchesProductsByIdNotPresent_returnsNull() {
         assertNull(productDataStore.find(100));
-
-        tearDown();
     }
 
 
@@ -98,15 +97,11 @@ class ProductDaoWithJdbcTest {
         Product foundProduct = productDataStore.find(productName);
 
         assertEquals(productName, foundProduct.getName());
-
-        tearDown();
     }
 
     @Test
     void find_searchesProductsByNameNotPresent_returnsNull() {
         assertNull(productDataStore.find("abraka"));
-
-        tearDown();
     }
 
 
@@ -115,8 +110,6 @@ class ProductDaoWithJdbcTest {
         productDataStore.remove(1);
 
         assertNull(productDataStore.find(1));
-
-        tearDown();
     }
 
     @Test
@@ -125,8 +118,6 @@ class ProductDaoWithJdbcTest {
 
         assertEquals(allProducts.size(),
                 productDataStore.getAll().size());
-
-        tearDown();
     }
 
     @Test
@@ -134,10 +125,7 @@ class ProductDaoWithJdbcTest {
         List<Product> allProductBySupplier = Arrays.asList(product1, product2);
 
         assertEquals(allProductBySupplier.toString(),
-                productDataStore.getBy(mockGyumolcsos).toString());
-
-        tearDown();
-
+                productDataStore.getBy(gyumolcsos).toString());
     }
 
     @Test
@@ -145,12 +133,11 @@ class ProductDaoWithJdbcTest {
         List<Product> allProductByProductCategory = Arrays.asList(product3);
 
         assertEquals(allProductByProductCategory.toString(),
-                productDataStore.getBy(mockZoldseg).toString());
-
-        tearDown();
+                productDataStore.getBy(zoldseg).toString());
     }
 
 
+    @AfterEach
     void tearDown() {
         productDataStore.clearAll();
         supplierDataStore.clearAll();
